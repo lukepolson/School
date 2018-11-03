@@ -124,7 +124,7 @@ void raw_to_csv() {
 
     std::ofstream myfile;
     myfile.open (WRITE_PATH+i+".csv");
-    myfile << "Time,Integral 1200,Integral 7400,\n";
+    myfile << "Time,Integral 1200,Integral 7400\n";
     for(int j=0; j<t->GetEntries(); j++) {
       myfile << get_time(tm, j);
       myfile << ",";

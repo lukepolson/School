@@ -126,11 +126,11 @@ void raw_to_csv() {
     myfile.open (WRITE_PATH+i+".csv");
     myfile << "Time,Integral 1200,Integral 7400\n";
     for(int j=0; j<t->GetEntries(); j++) {
-      myfile << get_time(tm, j);
+      myfile << std::fixed << std::setprecision(6)<< get_time(tm, j);
       myfile << ",";
-      myfile << get_integral(data, j, 1200);
+      myfile << std::fixed << std::setprecision(6)<< get_integral(data, j, 1200);
       myfile << ",";
-      myfile << get_integral(data, j, 7400);
+      myfile << std::fixed << std::setprecision(6)<< get_integral(data, j, 7400);
       myfile << "\n";
     }
     myfile.close();

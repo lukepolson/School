@@ -4,18 +4,16 @@
 
 //Threshhold and number of runs that evening. The date as well
 TString threshhold = "100";
-int NUM_RUNS = 3;
+int NUM_RUNS = 1;
 TString date = "june26";
 
-//WINDOWS
-TString READ_PATH = "D:/Roney2018/oldsummerstuff/june26/sourceinnum2thresh50superclose30minjune26";
-TString WRITE_PATH = "/Users/lukepolson/Documents/GitHub/School/Phys 499/datafiles/"+date+"/data";
+
 
 //MAC
-/*
-TString READ_PATH = "/Users/lukepolson/Documents/Summer2018Roney/datafiles/"+date+"/threshhold"+threshhold+date+"data";
+
+TString READ_PATH = "/Users/lukepolson/Desktop/sourceinnum2thresh50superclose30minjune26";
 TString WRITE_PATH = "/Users/lukepolson/Documents/GitHub/School/Phys 499/datafiles/"+date+"/data";
-*/
+
   
 // File where events are read from. Trees and file used in main method
 TString filename;
@@ -31,7 +29,7 @@ double TRIGINIT = 5000;
 double TRIGFIN = 13000;
 
 // This is the channel number used with the digitizer
-TString c = "0";
+TString c = "1";
 
 
 // Helper method used to get the baseline average of a given event (set of data)

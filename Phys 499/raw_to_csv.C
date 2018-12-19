@@ -5,10 +5,17 @@
 //Threshhold and number of runs that evening. The date as well
 TString threshhold = "100";
 int NUM_RUNS = 3;
-TString date = "june4";
+TString date = "june26";
 
+//WINDOWS
+TString READ_PATH = "D:/Roney2018/oldsummerstuff/june26/sourceinnum2thresh50superclose30minjune26";
+TString WRITE_PATH = "/Users/lukepolson/Documents/GitHub/School/Phys 499/datafiles/"+date+"/data";
+
+//MAC
+/*
 TString READ_PATH = "/Users/lukepolson/Documents/Summer2018Roney/datafiles/"+date+"/threshhold"+threshhold+date+"data";
 TString WRITE_PATH = "/Users/lukepolson/Documents/GitHub/School/Phys 499/datafiles/"+date+"/data";
+*/
   
 // File where events are read from. Trees and file used in main method
 TString filename;

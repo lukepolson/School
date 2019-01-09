@@ -4,14 +4,14 @@
 
 //Threshhold and number of runs that evening. The date as well
 TString threshhold = "100";
-int NUM_RUNS = 1;
-TString date = "june26";
+int NUM_RUNS = 10;
+TString date = "jan_1_2019";
 
 
 
 //MAC
 
-TString READ_PATH = "/Users/lukepolson/Desktop/sourceinnum2thresh50superclose30minjune26";
+TString READ_PATH = "/Users/lukepolson/Desktop/jan_test_1/Jan_Test_Data/test1_alpha_data";
 TString WRITE_PATH = "/Users/lukepolson/Documents/GitHub/School/Phys 499/datafiles/"+date+"/data";
 
   
@@ -29,7 +29,7 @@ double TRIGINIT = 5000;
 double TRIGFIN = 13000;
 
 // This is the channel number used with the digitizer
-TString c = "1";
+TString c = "0";
 
 
 // Helper method used to get the baseline average of a given event (set of data)

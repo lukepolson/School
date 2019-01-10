@@ -100,7 +100,7 @@ double get_integral(vector<double> *data, int event, double timevalue) {
 }
 
 
-double get_time(double_t tm, int event) {
+double get_time(double tm, int event) {
 
   t->GetEntry(event);
   return tm;

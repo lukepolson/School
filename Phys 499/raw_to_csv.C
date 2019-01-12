@@ -3,15 +3,15 @@
 #include <fstream>
 
 //Threshhold and number of runs that evening. The date as well
-TString threshhold = "100";
-int NUM_RUNS = 10;
-TString date = "jan_2_2019";
+TString threshhold = "40";
+int NUM_RUNS = 1;
+TString date = "jan_3_2019";
 
 
 
 //MAC
 
-TString READ_PATH = "/Users/lukepolson/Desktop/Jan_Test_Data/test2_alpha_data";
+TString READ_PATH = "/Users/lukepolson/Desktop/Jan_Test_Data/test3_alpha_data";
 TString WRITE_PATH = "/Users/lukepolson/Documents/GitHub/School/Phys 499/datafiles/"+date+"/data";
 
   

@@ -4,15 +4,15 @@
 
 //Threshhold and number of runs that evening. The date as well
 TString threshhold = "40";
-int NUM_RUNS = 10;
-TString date = "jan_14_2019";
-TString run_num = "3";
+int NUM_RUNS = 9;
+TString date = "jan_15_2019";
+TString run_num = "1";
 
 
 
 //MAC
 
-TString READ_PATH = "/Users/lukepolson/Desktop/Jan_Test_Data/test6_alpha_data";
+TString READ_PATH = "/Users/lukepolson/Desktop/Jan_Test_Data/jan15_run1_alpha_data";
 TString WRITE_PATH = "/Users/lukepolson/Documents/GitHub/School/Phys 499/datafiles/"+date+"/run"+run_num+"data";
 
   

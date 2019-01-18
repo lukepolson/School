@@ -4,15 +4,15 @@
 
 //Threshhold and number of runs that evening. The date as well
 TString threshhold = "40";
-int NUM_RUNS = 9;
+int NUM_RUNS = 10;
 TString date = "jan_15_2019";
-TString run_num = "1";
+TString run_num = "2";
 
 
 
 //MAC
 
-TString READ_PATH = "/Users/lukepolson/Desktop/Jan_Test_Data/jan15_run1_alpha_data";
+TString READ_PATH = "/Users/lukepolson/Desktop/Jan_Test_Data/jan15_run2_alpha_data";
 TString WRITE_PATH = "/Users/lukepolson/Documents/GitHub/School/Phys 499/datafiles/"+date+"/run"+run_num+"data";
 
   
@@ -114,7 +114,7 @@ bool passeventcuts(vector<double>& data, int event) {
 
 void raw_to_csv() {
 
-  for(int i=1; i<=NUM_RUNS; i++) {
+  for(int i=9; i<=NUM_RUNS; i++) {
     //File that data is read from
     f = new TFile(READ_PATH+i+".root", "READ");
     t = (TTree*)f->Get("data");

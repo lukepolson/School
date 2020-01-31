@@ -1,0 +1,1380 @@
+
+------------------------------------------------------------------
+TORQUE PROLOGUE:
+  jobid:               1950970.ltda-cron.slac.stanford.edu
+  userid:              ebert
+  requested resources: mem=32mb,neednodes=1,nodes=1,walltime=05:00:00
+  queue:               batch
+  memory per CPU:      2048 MB
+  server host:         ltda-srv004
+  imagefile:           /BFROOT/etc/images/bbr-ltda.qcow2
+  host:                bbr-ltda-vm0083
+------------------------------------------------------------------
+
+
+set BetaMiniReadPersistence Kan                     ;# not set, using default   
+set levelOfDetail cache                                     ;# set to default   
+set ConfigPatch Run2                                        ;# set to default   
+set BetaMiniTuple root                                      ;# set to default   
+set histFileName /scratch/AllEventsSkim-Run1-OnPeak-R24f-92.root  ;# default is MyDstarMiniAnalysis.roo   
+# NEvent not set  
+BtaProdCreateSequence.tcl done 
+PidProdSequence:  PIDversion hardcoded to Run2_Prod2001. See R5707. 
+****************************************************** 
+    Everything                                      (enabled) 
+        BetaMiniSequence                                (enabled) 
+            BetaMiniInitSequence                            (enabled) 
+                BetaMiniEnvSequence                             (enabled) 
+                    RecEventControlSequence                         (enabled) 
+                        RecCallgrindControl                             (enabled) 	turn callgrind on or off
+                        EvtCounter                                      (enabled) 	event counter
+                        RecTimeStampFilter                              (enabled) 	timestamp filter
+                        RecThreadSafety                                 (enabled) 	Initialize HepMatrix thread safety
+                    GenBuildEnv                                     (enabled) 	Build General Environment
+                    MatBuildEnv                                     (enabled) 	Build Materials
+                    CdbApiInitSequence                              (enabled) 
+                        BdbTclProxyRegister                             (enabled) 	Manages operations with BdbTclModuleParmList
+                        CdbApiInitModule                                (enabled) 	Set up parameters of Conditions/DB API implementations
+                        CdbEvtLoadStateId                               (enabled) 	Load Cdb StateId into transient eventstore
+                    CfgInitSequence                                 (enabled) 
+                        CfgBuildEnv                                     (enabled) 	Build configDB Environment
+                        CfgSetKeyModule                                 (enabled) 	stores configKey in the environment
+                    PepBuildEnv                                     (enabled) 	build Pep environment
+                    BetaPidBuildEnv                                 (enabled) 	Loads environment for SPR-based PID selectors
+                    L3TBuildEnv                                     (enabled) 	Build L3Trigger environment
+                    L3TConfigModule                                 (enabled) 	Create L3 configuration
+                    SvtInitSequence                                 (enabled) 
+                        SvtBuildEnv                                     (enabled) 	initialize Geometry for the Svt
+                    DchInitSequence                                 (enabled) 
+                        DchBuildEnv                                     (enabled) 	Build Dch environment
+                        DchCondMonitor                                  (disabled)	Dch conditions monitor
+                    DrcInitSequence                                 (enabled) 
+                        DrcEnvModuleSequence                            (enabled) 
+                            DrcBuildEnv                                     (enabled) 	DIRC - Setup environement for the DIRC
+                            DrcBuildGeom                                    (enabled) 	DIRC - Create the DrcDetector
+                        DrcInitEvent                                    (enabled) 	DIRC - Initializations at the beginning of an Event
+                    EmcInitSequence                                 (enabled) 
+                        EmcBuildEnv                                     (enabled) 	Build Emc Environment
+                        EmcBuildGeom                                    (enabled) 	Builds Emc detector model
+                        EmcLoadPid                                      (enabled) 	Loads environmenty with Emc PID factory
+                        EmcEdgeCorrLoader                               (enabled) 	Load Emc Edge Correction into environment
+                        EmcNeutCorrLoader                               (enabled) 	Load Neutrals Correction into environment
+                        EmcLoadCalibToo                                 (enabled) 	Loads environment with relevant EMC calibrator(Too) proxy
+                        EmcLoadDigiCalib                                (enabled) 	Loads environment with relevant EMC digi calibrator proxies
+                        EmcPreshowerCorrLoader                          (enabled) 	Loads EMC preshower correction into environment
+                    IfrInitSequence                                 (enabled) 
+                        IfrBuildEnv                                     (enabled) 	IFR - build IfrEnv
+                        IfrVstModule                                    (enabled) 	IFR - visitor manager
+                        IfrPidObjyLoader                                (enabled) 	IFR - read Pid Calibration from CDB
+                        IfrMuCalib                                      (enabled) 	IFR - mu/pi calibration procedure
+                        IfrNeutralCalib                                 (enabled) 	IFR - neutral calibration procedure
+                    TrkBuildEnv                                     (enabled) 	Build Tracking environment
+                HbkTupleEnv                                     (disabled)	Build HbkTuple Manager
+                RooTupleEnv                                     (enabled) 	Build RooTuple Manager
+                PdtInit                                         (enabled) 	initialize Particle Data Table
+                BtaBuildEnv                                     (enabled) 	Put the BtaEnv object into the environment
+                BtaInitEvent                                    (enabled) 	Beta- event initialisation
+                EffTableSequence                                (enabled) 
+                    EffTableLoader                                  (enabled) 	Load Efficiency Table Proxies
+            BetaMiniReadSequence                            (enabled) 
+                CdbEvtLoadStateIdHistory                        (enabled) 	CdbEvtLoadStateId clone
+                KanCreateCM                                     (enabled) 	Create KanConversionManager
+                HdrKanLoadHdr                                   (enabled) 	HdrKanLoad clone
+                TagKanLoadTag                                   (enabled) 	TagKanLoad clone
+                KanEventUpdateTag                               (enabled) 	KanEventUpdate clone
+                BetaMiniTagFilterSequence                       (enabled) 
+                TrkKanLoadAod                                   (enabled) 	TrkKanLoad clone
+                EmcKanLoadAod                                   (enabled) 	EmcKanLoad clone
+                IfrKanLoadAod                                   (enabled) 	IfrKanLoad clone
+                PidKanLoadAod                                   (enabled) 	PidKanLoad clone
+                L1FctKanLoadAod                                 (enabled) 	L1FctKanLoad clone
+                L1GltKanLoadAod                                 (enabled) 	L1GltKanLoad clone
+                BtaMiniKanLoadCnd                               (enabled) 	BtaMiniKanLoad clone
+                KanEventUpdateAllTheRest                        (enabled) 	KanEventUpdate clone
+            BetaMiniDetectorSequence                        (enabled) 
+                BetaMiniPidSequence                             (enabled) 
+                    PidExpandChargedSummary                         (enabled) 	Expand PidChargedSummary to separate lists
+                    PidMakeTrkMap                                   (enabled) 	Make and fill map from Tracks to PidInfo objects
+                BetaMiniTrkSequence                             (enabled) 
+                    KalFit                                          (enabled) 	Kalmanize Mini tracks
+                    KalMiniRX                                       (enabled) 	Repair Mini tracks
+                    TrkMakePid                                      (enabled) 	Pid info from tracks
+                BetaMiniDrcSequence                             (enabled) 
+                    DrcCreatePidInfoFromMini                        (disabled)	DIRC - create DrcPidInfo from DrcTrack
+                    DrcIdentify                                     (disabled)	DIRC - Particle Id Module - first pass
+                    DrcCleanAssociation                             (disabled)	DIRC - Clean Associations 
+                    DrcSecondPass                                   (disabled)	DIRC - Particle Id Module - second pass
+                    DrcCheckReco                                    (disabled)	DIRC - check Reco (NA)
+                BunchT0MiniSequence                             (enabled) 
+                    InitBunchT0                                     (disabled)	MC Truth Bunch time
+                    DchTrkBunchT0                                   (disabled)	Track Bunch T0 Finder
+                    DrcCheckEventT0                                 (disabled)	DIRC - Check Event T0 using Dirc data
+                    TrkT0Faker                                      (enabled) 	Add T0 from tag-db to BunchList
+                    BunchT0TagSet                                   (disabled)	Set bunch T0 tags
+                    PrintBunch                                      (disabled)	Printout Bunch t0s
+                BetaMiniSvtSequence                             (enabled) 
+                    SvtHitReco                                      (disabled)	makes Clusters and Hits from rootClusters
+                    SvtMakePid                                      (disabled)	Create SvtPidInfo list
+                BetaMiniDchSequence                             (enabled) 
+                    DchMiniHitsSequence                             (enabled) 
+                        DchMiniMakeHits                                 (enabled) 	Reconstitute Default DchHit list
+                        DchMakeHitMap                                   (enabled) 	Create map of DchHit pointers to cells
+                    DchPidMiniSequence                              (enabled) 
+                        DchPidMakeHitMap                                (disabled)	Create dE/dx list
+                        DchMakePid                                      (disabled)	Create DchPidInfo list
+                        DchMakePidMap                                   (enabled) 	Index PID vs. tracks
+                        DchModifyPid                                    (enabled) 	Recompute DchPidInfo data
+                BetaMiniEmcSequence                             (enabled) 
+                    EmcMakeMiniReco                                 (enabled) 	Creates Bump, Cluster, and shared digi lists
+                    EmcSetClusterCalibrator                         (enabled) 	change cluster calibrator for EmcCands
+                    EmcTrackMatch                                   (enabled) 	Match tracks to bumps
+                    EmcCreateUniqueList                             (enabled) 	Make a unique list of EmcCands
+                    EmcMakeMiniCandLists                            (enabled) 	Creates the various lists of EmcCands from EmcListBank
+                    EmcListSplit                                    (enabled) 	Split EmcCand lists into charged,neutral
+                    EmcPreshowerAddPreshowerInfoList                (enabled) 	Add empty EmcPreshowerInfo list to event
+                BetaMiniIfrSequence                             (enabled) 
+                    IfrMakeExpansion                                (enabled) 	Expand compactified minis
+            BetaMiniNeutralHadSequence                      (disabled)
+                NeutralHadSequence                              (enabled) 
+                    NeutralHadMatch                                 (enabled) 	Emc and Ifr match
+                    MakeNeutralHad                                  (enabled) 	make IFR neutral hadrons
+                    NeutralHadMatchAll                              (enabled) 	Emc and Ifr match method2
+                    MakeNeutralHadAll                               (enabled) 	make all neutral hadrons
+                    NeutralHadNtuple                                (disabled)	neutral hadrons Ntuple
+            BetaMiniBtaSequence                             (enabled) 
+                BtaProdCreateSequence                           (enabled) 
+                    BtaLoadEvtInfo                                  (enabled) 	Load default EventInfo
+                PhysInitEvent                                   (enabled) 	Beta- event initialization
+                PhysCreateAlias                                 (enabled) 	create aliases for ALists
+                BetaLoadMiniSequence                            (enabled) 
+                    BtaLoadBeamSpot                                 (enabled) 	load the BeamSpot into the EventInfo
+                    LoadMiniBtaCandidates                           (enabled) 	load Beta lists from mini objects
+                LoadEventInfoSequence                           (enabled) 
+                    BtaLoadBeamSpot                                 (enabled) 	load the BeamSpot into the EventInfo
+                    BtaGoodTrackSequence                            (enabled) 
+                        LoadBetaTracksLists                             (enabled) 	Create BetaCandidate Lists
+                        GoodTrackVeryLooseSelection                     (enabled) 	Selection of good track for primary vertex
+                        GoodTrackAccSelection                           (enabled) 	Selection of good track within acceptance
+                        GoodTrackLooseSelection                         (enabled) 	Selection of good track for primary vertex
+                        GoodTrackAccLooseSelection                      (enabled) 	Selection of good track  within acceptance plus loose cuts
+                        GoodTrackTightSelection                         (enabled) 	Selection of good track for primary vertex
+                        GoodPhotonLooseSelection                        (enabled) 	Selection of loose good photons
+                        GoodNeutralLooseAccSelection                    (enabled) 	Selection of loose good photons
+                        GoodPhotonDefaultSelection                      (enabled) 	Selection of default good photons
+                        TrkMicroDispatch                                (enabled) 	Create bitmaps for tracks
+                        TrkEffTableCreator                              (disabled)	Create tracking efficiency tables
+                    VtxEvent                                        (enabled) 	search the vertex of the event
+            BetaMiniUtilitySequence                         (enabled) 
+                CpuCheck                                        (enabled) 	Check CPU time remaining
+                Signal                                          (enabled) 	intercept ^C
+                PrintParms                                      (disabled)	print parameter values
+                ReportFPE                                       (enabled) 	handle and report floating point exceptions
+        BetaMiniPhysicsSequence                         (enabled) 
+            SmpCompositionSequence                          (enabled) 
+                SmpTracksProdSequence                           (enabled) 
+                    GoodTracksHardVeryLoose                         (enabled) 	clone of SmpSubListerDefiner
+                SmpPidRefineProdSequence                        (enabled) 
+                    muNNTightGTL                                    (enabled) 	clone of SmpSubListerDefiner
+                    PidLHElectronsGTL                               (enabled) 	clone of SmpSubListerDefiner
+                    piLHLooseGTVL                                   (enabled) 	clone of SmpSubListerDefiner
+                    piLHLooseGTL                                    (enabled) 	clone of SmpSubListerDefiner
+                    muNotEl                                         (enabled) 	clone of SmpSubListerDefiner
+                    eOrMuBremAndGTL                                 (enabled) 	clone of SmpMergerDefiner
+                SmpKsProdSequence                               (enabled) 
+                    KsLoose                                         (enabled) 	clone of SmpMakerDefiner
+                    KsDefaultMass                                   (enabled) 	clone of SmpRefinerDefiner
+                    KsDefaultChisq                                  (enabled) 	clone of SmpSubListerDefiner
+                    KsTight                                         (enabled) 	clone of SmpSubListerDefiner
+                    KsVeryTight                                     (enabled) 	clone of SmpSubListerDefiner
+                    KsCleanLoose                                    (enabled) 	clone of SmpSubListerDefiner
+                SmpPi0ProdSequence                              (enabled) 
+                    SmpGammaConvProdSequence                        (enabled) 
+                        GammaConvLoose                                  (enabled) 	clone of SmpMakerDefiner
+                        GammaConvDefault                                (enabled) 	clone of SmpSubListerDefiner
+                        GammaConvTight                                  (enabled) 	clone of SmpSubListerDefiner
+                        GammaDalitzLoose                                (enabled) 	clone of SmpMakerDefiner
+                        GammaDalitzDefault                              (enabled) 	clone of SmpSubListerDefiner
+                        GammaDalitzTight                                (enabled) 	clone of SmpSubListerDefiner
+                        gammaConversionLoose                            (enabled) 	clone of SmpMergerDefiner
+                        gammaConversionDefault                          (enabled) 	clone of SmpMergerDefiner
+                        gammaConversionTight                            (enabled) 	clone of SmpMergerDefiner
+                    GammaForPi0                                     (enabled) 	clone of SmpSubListerDefiner
+                    GammaForPi0wConv                                (enabled) 	clone of SmpMergerDefiner
+                    pi0ConvVeryLoose                                (enabled) 	clone of SmpMakerDefiner
+                    pi0ConvVeryVeryLoose                            (enabled) 	clone of SmpMakerDefiner
+                    pi0VeryLoose                                    (enabled) 	clone of SmpMakerDefiner
+                    pi0TightMassNoMomentumCut                       (enabled) 	clone of SmpSubListerDefiner
+                    pi0Loose                                        (enabled) 	clone of SmpSubListerDefiner
+                    pi0LooseMass                                    (enabled) 	clone of SmpRefitterDefiner
+                    pi0DefaultMass                                  (enabled) 	clone of SmpRefitterDefiner
+                    pi0VeryLoosewConv                               (enabled) 	clone of SmpMakerDefiner
+                    pi0LoosewConv                                   (enabled) 	clone of SmpSubListerDefiner
+                    pi0LooseMasswConv                               (enabled) 	clone of SmpRefitterDefiner
+                    pi0DefaultMasswConv                             (enabled) 	clone of SmpRefitterDefiner
+                    pi0SoftLoose                                    (enabled) 	clone of SmpRefinerDefiner
+                    pi0SoftDefaultMass                              (enabled) 	clone of SmpRefinerDefiner
+                    pi0AllVeryLoose                                 (enabled) 	clone of SmpMergerDefiner
+                    pi0AllLoose                                     (enabled) 	clone of SmpMergerDefiner
+                    pi0AllDefault                                   (enabled) 	clone of SmpMergerDefiner
+                    pi0AllCVeryLoose                                (enabled) 	clone of SmpMergerDefiner
+                    pi0AllCLoose                                    (enabled) 	clone of SmpMergerDefiner
+                    pi0AllCDefault                                  (enabled) 	clone of SmpMergerDefiner
+                    pi0C2Body                                       (enabled) 	clone of SmpMakerDefiner
+                    GammaWithConv                                   (enabled) 	clone of SmpMergerDefiner
+                    pi0C2BodyConv                                   (enabled) 	clone of SmpMakerDefiner
+                    MergedPi0TightHard                              (enabled) 	clone of SmpSubListerDefiner
+                    pi0AllC2BodyConv                                (enabled) 	clone of SmpMergerDefiner
+                SmpEtaProdSequence                              (enabled) 
+                    GammaForEta                                     (enabled) 	clone of SmpSubListerDefiner
+                    GammaForEtaNoMass                               (enabled) 	clone of SmpSubListerDefiner
+                    etaggDefault                                    (enabled) 	clone of SmpMakerDefiner
+                    etaggSemiExcl                                   (enabled) 	clone of SmpRefinerDefiner
+                    etaggDefaultNoMass                              (enabled) 	clone of SmpMakerDefiner
+                    eta3piDefault                                   (enabled) 	clone of SmpMakerDefiner
+                    eta3piSemiExcl                                  (enabled) 	clone of SmpRefitterDefiner
+                    eta3piSpecial                                   (enabled) 	clone of SmpMakerDefiner
+                    etaDefault                                      (enabled) 	clone of SmpMergerDefiner
+                    etaAllSpecial3Pi                                (enabled) 	clone of SmpMergerDefiner
+                SmpKstarProdSequence                            (enabled) 
+                    KstarKsPi0VeryLoose                             (enabled) 	clone of SmpMakerDefiner
+                    KstarKsPi0Loose                                 (enabled) 	clone of SmpSubListerDefiner
+                    KstarKsPi0Default                               (enabled) 	clone of SmpSubListerDefiner
+                    KstarKPiVeryVeryLoose                           (enabled) 	clone of SmpMakerDefiner
+                    KstarKPiVeryLoose                               (enabled) 	clone of SmpSubListerDefiner
+                    KstarKPiLoose                                   (enabled) 	clone of SmpSubListerDefiner
+                    KstarKPiDefault                                 (enabled) 	clone of SmpSubListerDefiner
+                    KstarKPiDefaultPID                              (enabled) 	clone of SmpSubListerDefiner
+                    KstarKsPiVeryLoose                              (enabled) 	clone of SmpMakerDefiner
+                    KstarKsPiSemiLoose                              (enabled) 	clone of SmpSubListerDefiner
+                    KstarKsPiLoose                                  (enabled) 	clone of SmpSubListerDefiner
+                    KstarKsPiLooseFixed                             (enabled) 	clone of SmpSubListerDefiner
+                    KstarKsPiDefault                                (enabled) 	clone of SmpSubListerDefiner
+                    KstarKPi0VeryVeryLoose                          (enabled) 	clone of SmpMakerDefiner
+                    KstarKPi0VeryLoose                              (enabled) 	clone of SmpSubListerDefiner
+                    KstarKPi0SemiLoose                              (enabled) 	clone of SmpSubListerDefiner
+                    KstarKPi0Loose                                  (enabled) 	clone of SmpSubListerDefiner
+                    KstarKPi0LooseFixed                             (enabled) 	clone of SmpSubListerDefiner
+                    KstarKPi0Default                                (enabled) 	clone of SmpSubListerDefiner
+                    KstarKPi0SemiLoosePID                           (enabled) 	clone of SmpSubListerDefiner
+                    KstarKPi0DefaultPID                             (enabled) 	clone of SmpSubListerDefiner
+                    KstarChrgVeryLoose                              (enabled) 	clone of SmpMergerDefiner
+                    KstarChrgSemiLoose                              (enabled) 	clone of SmpMergerDefiner
+                    KstarChrgLoose                                  (enabled) 	clone of SmpMergerDefiner
+                    KstarChrgLooseFixed                             (enabled) 	clone of SmpMergerDefiner
+                    KstarChrgDefault                                (enabled) 	clone of SmpMergerDefiner
+                    KstarChrgSemiLoosePID                           (enabled) 	clone of SmpMergerDefiner
+                    KstarChrgDefaultPID                             (enabled) 	clone of SmpMergerDefiner
+                    KstarNeutralVeryLoose                           (enabled) 	clone of SmpMergerDefiner
+                    KstarNeutralLoose                               (enabled) 	clone of SmpMergerDefiner
+                    KstarNeutralDefault                             (enabled) 	clone of SmpMergerDefiner
+                    KstarNeutralDefaultPID                          (enabled) 	clone of SmpMergerDefiner
+                SmpCharmlessProdSequence                        (enabled) 
+                    omegaVeryLooseAndPid                            (enabled) 	clone of SmpMakerDefiner
+                    omegaDefault                                    (enabled) 	clone of SmpMakerDefiner
+                    omegaTight                                      (enabled) 	clone of SmpSubListerDefiner
+                    phiDefault                                      (enabled) 	clone of SmpMakerDefiner
+                    phiDefaultPID                                   (enabled) 	clone of SmpSubListerDefiner
+                    phiTightPID                                     (enabled) 	clone of SmpSubListerDefiner
+                    rho0VeryLooseMassAndPid                         (enabled) 	clone of SmpMakerDefiner
+                    rho0DefaultMassAndPid                           (enabled) 	clone of SmpSubListerDefiner
+                    rho0VeryLoose                                   (enabled) 	clone of SmpMakerDefiner
+                    rho0Loose                                       (enabled) 	clone of SmpSubListerDefiner
+                    rho0Default                                     (enabled) 	clone of SmpSubListerDefiner
+                    rho0Tight                                       (enabled) 	clone of SmpSubListerDefiner
+                    rho0HardTight                                   (enabled) 	clone of SmpSubListerDefiner
+                    rhoCVeryLooseMassAndPid                         (enabled) 	clone of SmpMakerDefiner
+                    rhoCBRecoLoose                                  (enabled) 	clone of SmpMakerDefiner
+                    rhoCDefault                                     (enabled) 	clone of SmpSubListerDefiner
+                    rhoCTight                                       (enabled) 	clone of SmpSubListerDefiner
+                    rhoCHardTight                                   (enabled) 	clone of SmpSubListerDefiner
+                    f0ToPiPiDefault                                 (enabled) 	clone of SmpMakerDefiner
+                    f0ToPiPiTight                                   (enabled) 	clone of SmpSubListerDefiner
+                    f0ToPiPiHardTight                               (enabled) 	clone of SmpSubListerDefiner
+                    a00Default                                      (enabled) 	clone of SmpMakerDefiner
+                    a0CDefault                                      (enabled) 	clone of SmpMakerDefiner
+                    a0Default                                       (enabled) 	clone of SmpMergerDefiner
+                    a1CLoose                                        (enabled) 	clone of SmpMakerDefiner
+                    a1CDefault                                      (enabled) 	clone of SmpSubListerDefiner
+                    a1CTight                                        (enabled) 	clone of SmpSubListerDefiner
+                    a1CHardTight                                    (enabled) 	clone of SmpSubListerDefiner
+                    a10Loose                                        (enabled) 	clone of SmpMakerDefiner
+                    gammaForEtaPrime                                (enabled) 	clone of SmpSubListerDefiner
+                    etaPrgDefault                                   (enabled) 	clone of SmpMakerDefiner
+                    etaPrgPID                                       (enabled) 	clone of SmpSubListerDefiner
+                    etaPeppDefault                                  (enabled) 	clone of SmpMakerDefiner
+                    etaPeppPID                                      (enabled) 	clone of SmpMakerDefiner
+                    etaPAllPID                                      (enabled) 	clone of SmpMergerDefiner
+                    etaPDefault                                     (enabled) 	clone of SmpMergerDefiner
+                SmpLambdaProdSequence                           (enabled) 
+                    LambdaLoose                                     (enabled) 	clone of SmpMakerDefiner
+                    LambdaDefault                                   (enabled) 	clone of SmpSubListerDefiner
+                    LambdaTight                                     (enabled) 	clone of SmpSubListerDefiner
+                    LambdaVeryLoosePID                              (enabled) 	clone of SmpSubListerDefiner
+                    LambdaLoosePID                                  (enabled) 	clone of SmpSubListerDefiner
+                    LambdaDefaultPID                                (enabled) 	clone of SmpSubListerDefiner
+                    LambdaTightPID                                  (enabled) 	clone of SmpSubListerDefiner
+                    LambdaVeryLoosePIDMass                          (enabled) 	clone of SmpRefitterDefiner
+                    ChargedTracksForLambdaCalib                     (enabled) 	clone of SmpSubListerDefiner
+                    LambdaCalib                                     (enabled) 	clone of SmpSubListerDefiner
+                SmpSigmaProdSequence                            (enabled) 
+                    SigmaPlusToPPi0VeryLoosePID                     (enabled) 	clone of SmpMakerDefiner
+                    SigmaPlusToPPi0LoosePID                         (enabled) 	clone of SmpSubListerDefiner
+                    GoodPhotonLooseForSigma0                        (enabled) 	clone of SmpSubListerDefiner
+                    LambdaForSigma0                                 (enabled) 	clone of SmpSubListerDefiner
+                    Sigma0ToLambdaPhotonVeryLoosePID                (enabled) 	clone of SmpMakerDefiner
+                    Sigma0ToLambdaPhotonLoosePID                    (enabled) 	clone of SmpSubListerDefiner
+                    XiMinusToLambdaPiLoose                          (enabled) 	clone of SmpMakerDefiner
+                    OmegaToLambdaKLoose                             (enabled) 	clone of SmpMakerDefiner
+                SmpHyperonProdSequence                          (enabled) 
+                SmpD0ProdSequence                               (enabled) 
+                    D0ToKPiLoose                                    (enabled) 	clone of SmpMakerDefiner
+                    D0ToKPiLoosePID                                 (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKPiPi0CFVeryLoose                           (enabled) 	clone of SmpMakerDefiner
+                    D0ToKPiPi0DCSVeryLoose                          (enabled) 	clone of SmpRefinerDefiner
+                    D0ToKPiPi0VeryLoose                             (enabled) 	clone of SmpMergerDefiner
+                    D0ToKKPi0VeryLoose                              (enabled) 	clone of SmpMakerDefiner
+                    D0ToPiPiPi0VeryLoose                            (enabled) 	clone of SmpMakerDefiner
+                    D0To2ProngPi0CSVeryLoose                        (enabled) 	clone of SmpMergerDefiner
+                    D0ToKPiPi0Loose                                 (enabled) 	clone of SmpMakerDefiner
+                    D0ToKPiPi0LoosePID                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKPiSemiLoose                                (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKPiDefault                                  (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKPiPi0SemiLoose                             (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKPiPi0Default                               (enabled) 	clone of SmpSubListerDefiner
+                    D0ToK3PiLoose                                   (enabled) 	clone of SmpMakerDefiner
+                    D0ToK3PiLoosePID                                (enabled) 	clone of SmpSubListerDefiner
+                    D0ToK3PiSemiLoose                               (enabled) 	clone of SmpSubListerDefiner
+                    D0ToK3PiDefault                                 (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPiPiLoose                                 (enabled) 	clone of SmpMakerDefiner
+                    D0ToKsPiPiSemiLoose                             (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPiPiDefault                               (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPi0Loose                                  (enabled) 	clone of SmpMakerDefiner
+                    D0ToKsPi0SemiLoose                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPi0Default                                (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPi0Tight                                  (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPiPiPi0Loose                              (enabled) 	clone of SmpMakerDefiner
+                    D0ToKsPiPiPi0Default                            (enabled) 	clone of SmpSubListerDefiner
+                    D0ToPiPiLoose                                   (enabled) 	clone of SmpMakerDefiner
+                    D0ToPiPiDefault                                 (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKKLoose                                     (enabled) 	clone of SmpMakerDefiner
+                    D0ToKKLoosePID                                  (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKKDefault                                   (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsKsLoose                                   (enabled) 	clone of SmpMakerDefiner
+                    D0ToKsKsDefault                                 (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKKPiPiLoose                                 (enabled) 	clone of SmpMakerDefiner
+                    D0ToKKPiPiLoosePID                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKKPiPiDefault                               (enabled) 	clone of SmpSubListerDefiner
+                    D0ToPiPiPiPiLoose                               (enabled) 	clone of SmpMakerDefiner
+                    D0ToPiPiPiPiDefault                             (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKKPi0Default                                (enabled) 	clone of SmpMakerDefiner
+                    D0ToKpPiKsDefault                               (enabled) 	clone of SmpMakerDefiner
+                    D0ToKmPiKsDefault                               (enabled) 	clone of SmpMakerDefiner
+                    D0ToKKKsLoose                                   (enabled) 	clone of SmpMakerDefiner
+                    D0ToKKKsDefault                                 (enabled) 	clone of SmpSubListerDefiner
+                    D0ToPiPiPi0Default                              (enabled) 	clone of SmpMakerDefiner
+                    D0ToKsEtaLoose                                  (enabled) 	clone of SmpMakerDefiner
+                    D0ToKsEtaSemiLoose                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsEtaDefault                                (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsEtaTight                                  (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsEtaPLoose                                 (enabled) 	clone of SmpMakerDefiner
+                    D0ToKsEtaPSemiLoose                             (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsEtaPDefault                               (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsEtaPTight                                 (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsOmegaLoose                                (enabled) 	clone of SmpMakerDefiner
+                    D0ToKsOmegaSemiLoose                            (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsOmegaDefault                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsOmegaTight                                (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPhiLoose                                  (enabled) 	clone of SmpMakerDefiner
+                    D0ToKsPhiSemiLoose                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPhiDefault                                (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPhiTight                                  (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsRho0Loose                                 (enabled) 	clone of SmpMakerDefiner
+                    D0ToKsRho0SemiLoose                             (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsRho0Default                               (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsRho0Tight                                 (enabled) 	clone of SmpSubListerDefiner
+                    D0ToRho0Pi0Loose                                (enabled) 	clone of SmpMakerDefiner
+                    D0ToRho0Pi0Default                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ToRho0Pi0Tight                                (enabled) 	clone of SmpRefinerDefiner
+                    D0ToPhiPi0Loose                                 (enabled) 	clone of SmpMakerDefiner
+                    D0ToPhiPi0Default                               (enabled) 	clone of SmpSubListerDefiner
+                    D0ToPiPiNoPIDDefault                            (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKKNoPIDLoose                                (enabled) 	clone of SmpMakerDefiner
+                    D0ToKKNoPIDDefault                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ToPhiEtaLoose                                 (enabled) 	clone of SmpMakerDefiner
+                    D0ToPhiEtaDefault                               (enabled) 	clone of SmpSubListerDefiner
+                    D0ToRho0EtaLoose                                (enabled) 	clone of SmpMakerDefiner
+                    D0ToRho0EtaDefault                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ToPi0Pi0Loose                                 (enabled) 	clone of SmpMakerDefiner
+                    D0ToPi0Pi0Default                               (enabled) 	clone of SmpSubListerDefiner
+                    D0MainLoose                                     (enabled) 	clone of SmpMergerDefiner
+                    D0MainLoosePID                                  (enabled) 	clone of SmpMergerDefiner
+                    D0MainSemiLoose                                 (enabled) 	clone of SmpMergerDefiner
+                    D0MainDefault                                   (enabled) 	clone of SmpMergerDefiner
+                    D0TreeLoose                                     (enabled) 	clone of SmpMergerDefiner
+                    D0TreeSemiLoose                                 (enabled) 	clone of SmpMergerDefiner
+                    D0DalitzSemiLoose                               (enabled) 	clone of SmpMergerDefiner
+                    D0TreeLoosePID                                  (enabled) 	clone of SmpMergerDefiner
+                    D0TreeDefault                                   (enabled) 	clone of SmpMergerDefiner
+                    D0CabibboLoose                                  (enabled) 	clone of SmpMergerDefiner
+                    D0CabibboLoosePID                               (enabled) 	clone of SmpMergerDefiner
+                    D0CabibboDefault                                (enabled) 	clone of SmpMergerDefiner
+                    D0Loose                                         (enabled) 	clone of SmpMergerDefiner
+                    D0SemiLoose                                     (enabled) 	clone of SmpMergerDefiner
+                    D0LoosePID                                      (enabled) 	clone of SmpMergerDefiner
+                    D0Default                                       (enabled) 	clone of SmpMergerDefiner
+                    D0ChrgKLoose                                    (enabled) 	clone of SmpMergerDefiner
+                    D0ChrgKSemiLoose                                (enabled) 	clone of SmpMergerDefiner
+                    D0ChrgKDefault                                  (enabled) 	clone of SmpMergerDefiner
+                    D0ChrgKLoosePID                                 (enabled) 	clone of SmpMergerDefiner
+                    D0NeutralKLoose                                 (enabled) 	clone of SmpMergerDefiner
+                    D0NeutralKLoosePID                              (enabled) 	clone of SmpMergerDefiner
+                    D0NeutralKDefault                               (enabled) 	clone of SmpMergerDefiner
+                    D0AllDefault                                    (enabled) 	clone of SmpMergerDefiner
+                    D0No4BodyDefault                                (enabled) 	clone of SmpMergerDefiner
+                    D0CPOddSemiLoose                                (enabled) 	clone of SmpMergerDefiner
+                    D0CPOddDefault                                  (enabled) 	clone of SmpMergerDefiner
+                    D0CPOdd1Tight                                   (enabled) 	clone of SmpMergerDefiner
+                    D0CPEven1SemiLoose                              (enabled) 	clone of SmpMergerDefiner
+                    D0CPEven1Default                                (enabled) 	clone of SmpMergerDefiner
+                    D0CPEven2Default                                (enabled) 	clone of SmpMergerDefiner
+                    D0CPEvenSemiLoose                               (enabled) 	clone of SmpMergerDefiner
+                    D0CPEvenDefault                                 (enabled) 	clone of SmpMergerDefiner
+                    D0HardAll                                       (enabled) 	clone of SmpMergerDefiner
+                    D0ReducedSemiLoose                              (enabled) 	clone of SmpMergerDefiner
+                    D0ReducedDefault                                (enabled) 	clone of SmpMergerDefiner
+                    D0CabNonCPDefault                               (enabled) 	clone of SmpMergerDefiner
+                    D0MainHardSemiLoose                             (enabled) 	clone of SmpSubListerDefiner
+                    D0MainHardDefault                               (enabled) 	clone of SmpSubListerDefiner
+                    D0HardLoose                                     (enabled) 	clone of SmpSubListerDefiner
+                    D0HardSemiLoose                                 (enabled) 	clone of SmpSubListerDefiner
+                    D0DalitzHardSemiLoose                           (enabled) 	clone of SmpSubListerDefiner
+                    D0HardLoosePID                                  (enabled) 	clone of SmpSubListerDefiner
+                    D0HardDefault                                   (enabled) 	clone of SmpSubListerDefiner
+                    D0ChrgKHardDefault                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ChrgKHardSemiLoose                            (enabled) 	clone of SmpSubListerDefiner
+                    D0AllHardDefault                                (enabled) 	clone of SmpSubListerDefiner
+                    D0No4BodyHardDefault                            (enabled) 	clone of SmpSubListerDefiner
+                    D0CPOddHardSemiLoose                            (enabled) 	clone of SmpSubListerDefiner
+                    D0CPOddHardDefault                              (enabled) 	clone of SmpSubListerDefiner
+                    D0CPEvenHardSemiLoose                           (enabled) 	clone of SmpSubListerDefiner
+                    D0CPEvenHardDefault                             (enabled) 	clone of SmpSubListerDefiner
+                    D0HardReducedSemiLoose                          (enabled) 	clone of SmpSubListerDefiner
+                    D0HardReducedDefault                            (enabled) 	clone of SmpSubListerDefiner
+                    D0CabNonCPHard                                  (enabled) 	clone of SmpSubListerDefiner
+                    D0ChrgKSemiHardDefault                          (enabled) 	clone of SmpSubListerDefiner
+                SmpDcProdSequence                               (enabled) 
+                    DcToKPiPiLoose                                  (enabled) 	clone of SmpMakerDefiner
+                    DcToKPiPiSemiLoose                              (enabled) 	clone of SmpSubListerDefiner
+                    DcToKPiPiDefault                                (enabled) 	clone of SmpSubListerDefiner
+                    DcToKPiPiPi0Loose                               (enabled) 	clone of SmpMakerDefiner
+                    DcToKPiPiPi0Default                             (enabled) 	clone of SmpSubListerDefiner
+                    DcToKsPiLoose                                   (enabled) 	clone of SmpMakerDefiner
+                    DcToKsPiSemiLoose                               (enabled) 	clone of SmpSubListerDefiner
+                    DcToKsPiDefault                                 (enabled) 	clone of SmpSubListerDefiner
+                    DcToKsPiPiPiLoose                               (enabled) 	clone of SmpMakerDefiner
+                    DcToKsPiPiPiLooseA                              (enabled) 	clone of SmpMakerDefiner
+                    DcToKsPiPiPiLooseB                              (enabled) 	clone of SmpMakerDefiner
+                    DcToKsPiPiPiLooseC                              (enabled) 	clone of SmpMakerDefiner
+                    DcToKsPiPiPiLooseAlt                            (enabled) 	clone of SmpMergerDefiner
+                    DcToKsPiPiPiDefault                             (enabled) 	clone of SmpSubListerDefiner
+                    DcToKsPiPi0Loose                                (enabled) 	clone of SmpMakerDefiner
+                    DcToKsPiPi0Default                              (enabled) 	clone of SmpSubListerDefiner
+                    DcToKKPiLoose                                   (enabled) 	clone of SmpMakerDefiner
+                    DcToKKPiDefault                                 (enabled) 	clone of SmpSubListerDefiner
+                    DcToPiPiPiLoose                                 (enabled) 	clone of SmpMakerDefiner
+                    DcToPiPiPiDefault                               (enabled) 	clone of SmpSubListerDefiner
+                    DcToKsKLoose                                    (enabled) 	clone of SmpMakerDefiner
+                    DcToKsKLoosePID                                 (enabled) 	clone of SmpSubListerDefiner
+                    DcToKsKDefault                                  (enabled) 	clone of SmpSubListerDefiner
+                    DcToKsKPiPiLoose                                (enabled) 	clone of SmpMakerDefiner
+                    DcToKsKPiPiLoosePID                             (enabled) 	clone of SmpSubListerDefiner
+                    DcToKsKPiPiDefault                              (enabled) 	clone of SmpSubListerDefiner
+                    DcLoose                                         (enabled) 	clone of SmpMergerDefiner
+                    DcLoosePID                                      (enabled) 	clone of SmpMergerDefiner
+                    DcDefault                                       (enabled) 	clone of SmpMergerDefiner
+                    Dc3prongLoosePID                                (enabled) 	clone of SmpMergerDefiner
+                    Dc3prongDefault                                 (enabled) 	clone of SmpMergerDefiner
+                    DcMainDefault                                   (enabled) 	clone of SmpMergerDefiner
+                    DcBareSemiLoose                                 (enabled) 	clone of SmpMergerDefiner
+                    DcHardLoose                                     (enabled) 	clone of SmpSubListerDefiner
+                    DcHardLoosePID                                  (enabled) 	clone of SmpSubListerDefiner
+                    DcHardDefault                                   (enabled) 	clone of SmpSubListerDefiner
+                    DcToKPiPiHardDefault                            (enabled) 	clone of SmpSubListerDefiner
+                    DcMainHardDefault                               (enabled) 	clone of SmpSubListerDefiner
+                    DcBareHardSemiLoose                             (enabled) 	clone of SmpSubListerDefiner
+                SmpDstarProdSequence                            (enabled) 
+                    DstarChrgKLooseRS                               (enabled) 	clone of SmpMakerDefiner
+                    DstarChrgKLooseWS                               (enabled) 	clone of SmpMakerDefiner
+                    DstarChrgKLoose                                 (enabled) 	clone of SmpMergerDefiner
+                    DstarChrgKLooseRSPID                            (enabled) 	clone of SmpSubListerDefiner
+                    DstarChrgKLooseWSPID                            (enabled) 	clone of SmpSubListerDefiner
+                    DstarChrgKLoosePID                              (enabled) 	clone of SmpMergerDefiner
+                    DstarNeutralKLoose                              (enabled) 	clone of SmpMakerDefiner
+                    DstarNeutralKLoosePID                           (enabled) 	clone of SmpSubListerDefiner
+                    DstarCabibboLoose                               (enabled) 	clone of SmpMakerDefiner
+                    DstarCabibboLoosePID                            (enabled) 	clone of SmpSubListerDefiner
+                    DstarAllLoose                                   (enabled) 	clone of SmpMergerDefiner
+                    DstarAllLoosePID                                (enabled) 	clone of SmpMergerDefiner
+                    DstarToD0PiLoose                                (enabled) 	clone of SmpMergerDefiner
+                    DstarToD0PiLoosePID                             (enabled) 	clone of SmpMergerDefiner
+                    DstarToD0PiMainHardSemiLoose                    (enabled) 	clone of SmpSubListerDefiner
+                    DstarToD0PiMainHardDefault                      (enabled) 	clone of SmpSubListerDefiner
+                    DstarToDcPi0Loose                               (enabled) 	clone of SmpMakerDefiner
+                    DstarToDcPi0MainHardLoose                       (enabled) 	clone of SmpMakerDefiner
+                    DstarToDcPi0BareHardSemiLoose                   (enabled) 	clone of SmpMakerDefiner
+                    DstarToDcPi0KPiPiHardLoose                      (enabled) 	clone of SmpMakerDefiner
+                    DstarLoose                                      (enabled) 	clone of SmpMergerDefiner
+                    DstarLoosePID                                   (enabled) 	clone of SmpMergerDefiner
+                    DstarMainHardSemiLoose                          (enabled) 	clone of SmpMergerDefiner
+                    DstarMainHardDefault                            (enabled) 	clone of SmpMergerDefiner
+                    DstarMainHardLoose                              (enabled) 	clone of SmpMergerDefiner
+                    DstarToDcPi0HardLoose                           (enabled) 	clone of SmpSubListerDefiner
+                    DstarToD0PiHardLoose                            (enabled) 	clone of SmpSubListerDefiner
+                    DstarToD0PiHardLoosePID                         (enabled) 	clone of SmpSubListerDefiner
+                    DstarHardLoose                                  (enabled) 	clone of SmpMergerDefiner
+                    DstarHardLoosePID                               (enabled) 	clone of SmpMergerDefiner
+                    DstarToD0PiDefault                              (enabled) 	clone of SmpSubListerDefiner
+                    DstarToD0PiChrgKDefault                         (enabled) 	clone of SmpSubListerDefiner
+                    DstarToD0PiHardDefault                          (enabled) 	clone of SmpSubListerDefiner
+                    DstarToD0PiMainDefault                          (enabled) 	clone of SmpSubListerDefiner
+                    DstarToDcPi0Default                             (enabled) 	clone of SmpSubListerDefiner
+                    DstarToDcPi0ChrgKDefault                        (enabled) 	clone of SmpSubListerDefiner
+                    DstarToDcPi0HardDefault                         (enabled) 	clone of SmpSubListerDefiner
+                    DstarDefault                                    (enabled) 	clone of SmpMergerDefiner
+                    DstarChrgKDefault                               (enabled) 	clone of SmpMergerDefiner
+                    DstarHardDefault                                (enabled) 	clone of SmpMergerDefiner
+                    DstarToD0Pi_D0ToKPiPi0VeryLoose                 (enabled) 	clone of SmpMakerDefiner
+                    DstarToD0Pi_D0To2ProngPi0CSVeryLoose            (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0HardLoose                          (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0HardLooseSemiLoose                 (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0CPEvenHardLooseSemiLoose           (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0CPOddHardLooseSemiLoose            (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0HardSemiLoose                      (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0Pi0HardLoosePID                       (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0Pi0DalitzHardSemiLoose                (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0MainHardSemiLoose                  (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0Pi0MainHardLoose                      (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0GammaHardLoose                        (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0GammaHardLooseSemiLoose               (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0GammaCPEvenHardLooseSemiLoose         (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0GammaCPOddHardLooseSemiLoose          (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0GammaHardSemiLoose                    (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0GammaMainHardLoose                    (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0GammaHardLoosePID                     (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0GammaDalitzHardSemiLoose              (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0GammaMainHardSemiLoose                (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0(KPi)Pi0Loose                             (enabled) 	clone of SmpMakerDefiner
+                    Dstar0(KPi)Pi0LoosePID                          (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0(KPi)GammaLoose                           (enabled) 	clone of SmpMakerDefiner
+                    Dstar0(KPi)GammaLoosePID                        (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0Pi0HardDefault                        (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0Pi0AllHardDefault                     (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0ChrgKDefault                       (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0ChrgKSemiHardDefault               (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0Pi0ReducedHardSemiLoose               (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0Pi0ReducedHardDefault                 (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0GammaHardDefault                      (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0(KPi)GammaHardDefault                 (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0GammaAllHardDefault                   (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0GammaChrgKDefault                     (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0GammaChrgKSemiHardDefault             (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0GammaReducedHardSemiLoose             (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0GammaReducedHardDefault               (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0Pi0CPEvenHardSemiLoose                (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0CPEvenHardDefault                  (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0GammaCPEvenHardSemiLoose              (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0GammaCPEvenHardDefault                (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0Pi0CPOddHardSemiLoose                 (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0CPOddHardDefault                   (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0GammaCPOddHardSemiLoose               (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0GammaCPOddHardDefault                 (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0ToD0Pi0ChrgKLoosePID                      (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0GammaChrgKLoosePID                    (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0NonCPHard                          (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0GNonCPHard                            (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0_D0ToNonCP_D0h0                    (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Gamma_D0ToNonCP_D0h0                  (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0_D0ToCPEven_D0h0                   (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Gamma_D0ToCPEven_D0h0                 (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0_D0ToCPOdd_D0h0                    (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Gamma_D0ToCPOdd_D0h0                  (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Pi0_D0ToKsPiPi_D0h0                   (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Gamma_D0ToKsPiPi_D0h0                 (enabled) 	clone of SmpMakerDefiner
+                SmpDstar0ProdSequence                           (enabled) 
+                    GoodPhotonDefaultForDstar                       (enabled) 	clone of SmpSubListerDefiner
+                    GoodPhotonLooseForDstar                         (enabled) 	clone of SmpSubListerDefiner
+                    Dstar0HardLoose                                 (enabled) 	clone of SmpMergerDefiner
+                    Dstar0HardLooseSemiLoose                        (enabled) 	clone of SmpMergerDefiner
+                    Dstar0DalitzHardSemiLoose                       (enabled) 	clone of SmpMergerDefiner
+                    Dstar0CPEvenHardLooseSemiLoose                  (enabled) 	clone of SmpMergerDefiner
+                    Dstar0CPOddHardLooseSemiLoose                   (enabled) 	clone of SmpMergerDefiner
+                    Dstar0HardSemiLoose                             (enabled) 	clone of SmpMergerDefiner
+                    Dstar0HardLoosePID                              (enabled) 	clone of SmpMergerDefiner
+                    Dstar0MainHardLoose                             (enabled) 	clone of SmpMergerDefiner
+                    Dstar0MainHardSemiLoose                         (enabled) 	clone of SmpMergerDefiner
+                    Dstar0(KPi)Loose                                (enabled) 	clone of SmpMergerDefiner
+                    Dstar0(KPi)LoosePID                             (enabled) 	clone of SmpMergerDefiner
+                    Dstar0AllHardDefault                            (enabled) 	clone of SmpMergerDefiner
+                    Dstar0ToD0ReducedHardSemiLoose                  (enabled) 	clone of SmpMergerDefiner
+                    Dstar0ToD0ReducedHardDefault                    (enabled) 	clone of SmpMergerDefiner
+                    Dstar0ChrgKDefault                              (enabled) 	clone of SmpMergerDefiner
+                    Dstar0ChrgKSemiHardDefault                      (enabled) 	clone of SmpMergerDefiner
+                    Dstar0D0CPEvenHardSemiLoose                     (enabled) 	clone of SmpMergerDefiner
+                    Dstar0D0CPEvenHardDefault                       (enabled) 	clone of SmpMergerDefiner
+                    Dstar0D0CPOddHardSemiLoose                      (enabled) 	clone of SmpMergerDefiner
+                    Dstar0D0CPOddHardDefault                        (enabled) 	clone of SmpMergerDefiner
+                    Dstar0ChrgKLoosePID                             (enabled) 	clone of SmpMergerDefiner
+                    Dstar0CabNonCPHard                              (enabled) 	clone of SmpMergerDefiner
+                    Dstar0HardDefault                               (enabled) 	clone of SmpMergerDefiner
+                    Dstar0HardDefaultDstar0ToD0Gamma(KPi)           (enabled) 	clone of SmpMergerDefiner
+                    Dstar0HardDefaultPlusDOCPModes                  (enabled) 	clone of SmpMergerDefiner
+                SmpSemiExclProdSequence                         (enabled) 
+                    KsSemiExcl                                      (enabled) 	clone of SmpSubListerDefiner
+                SmpJPsiProdSequence                             (enabled) 
+                    JPsiToTrkTrk                                    (enabled) 	clone of SmpMakerDefiner
+                    JPsiLooseEE                                     (enabled) 	clone of SmpMakerDefiner
+                    JPsiLHEE                                        (enabled) 	clone of SmpMakerDefiner
+                    JPsiLooseMuMu                                   (enabled) 	clone of SmpMakerDefiner
+                    JPsiLooseChm                                    (enabled) 	clone of SmpMergerDefiner
+                    JPsiDefaultMassEE                               (enabled) 	clone of SmpSubListerDefiner
+                    JPsiDefaultMassMuMu                             (enabled) 	clone of SmpSubListerDefiner
+                    JPsiDefaultMass                                 (enabled) 	clone of SmpMergerDefiner
+                    JPsiTightEE                                     (enabled) 	clone of SmpSubListerDefiner
+                    JPsiTightMuMu                                   (enabled) 	clone of SmpSubListerDefiner
+                    JPsiNNVeryLooseMuMu                             (enabled) 	clone of SmpSubListerDefiner
+                    Psi2SNNVeryLooseMuMu                            (enabled) 	clone of SmpSubListerDefiner
+                SmpPsi2SProdSequence                            (enabled) 
+                    Psi2SToTrkTrk                                   (enabled) 	clone of SmpMakerDefiner
+                    Psi2SLooseEE                                    (enabled) 	clone of SmpMakerDefiner
+                    Psi2SLHEE                                       (enabled) 	clone of SmpMakerDefiner
+                    Psi2SLooseMuMu                                  (enabled) 	clone of SmpMakerDefiner
+                    Psi2SLooseLL                                    (enabled) 	clone of SmpMergerDefiner
+                    Psi2SLooseAll                                   (enabled) 	clone of SmpMergerDefiner
+                    Psi2SDefaultMassEE                              (enabled) 	clone of SmpSubListerDefiner
+                    Psi2SDefaultMassMuMu                            (enabled) 	clone of SmpSubListerDefiner
+                    Psi2SDefaultMassLL                              (enabled) 	clone of SmpMergerDefiner
+                    Psi2SDefaultMass                                (enabled) 	clone of SmpMergerDefiner
+                    Psi2STightEE                                    (enabled) 	clone of SmpSubListerDefiner
+                    Psi2STightMuMu                                  (enabled) 	clone of SmpSubListerDefiner
+                    Psi2STightLL                                    (enabled) 	clone of SmpMergerDefiner
+                    Psi2S3bodyEE                                    (enabled) 	clone of SmpMakerDefiner
+                    Psi2S3bodyMuMu                                  (enabled) 	clone of SmpMakerDefiner
+                    Psi2S3body                                      (enabled) 	clone of SmpMergerDefiner
+                SmpBrecoProdSequence                            (enabled) 
+                    B0ToDstarPiDefault                              (enabled) 	clone of SmpMakerDefiner
+                    SmpBToDPPbarXProdSequence                       (enabled) 
+                        BToD0PPbarX                                     (enabled) 	clone of SmpMakerDefiner
+                        BToDcPPbarX                                     (enabled) 	clone of SmpMakerDefiner
+                SmpHllProdSequence                              (enabled) 
+                    KstarToKPi_Hll                                  (enabled) 	clone of SmpMakerDefiner
+                    KstarToKsPi_Hll                                 (enabled) 	clone of SmpMakerDefiner
+                    KstarToKPi0_Hll                                 (enabled) 	clone of SmpMakerDefiner
+                    KstarToKsPi0_Hll                                (enabled) 	clone of SmpMakerDefiner
+                    Rho0ToPiPi_Hll                                  (enabled) 	clone of SmpMakerDefiner
+                    RhoCToPiPi0_Hll                                 (enabled) 	clone of SmpMakerDefiner
+                    PhiToKK_Hll                                     (enabled) 	clone of SmpMakerDefiner
+                    EtaToGG_Hll                                     (enabled) 	clone of SmpRefinerDefiner
+                SmpLambdaCProdSequence                          (disabled)
+                    KsLoose_LambdaC                                 (enabled) 	clone of SmpRefinerDefiner
+                    Lambda_LambdaC                                  (enabled) 	clone of SmpMakerDefiner
+                    Sigma_LambdaC                                   (enabled) 	clone of SmpMakerDefiner
+                    LambdaCTopKpi                                   (enabled) 	clone of SmpMakerDefiner
+                    LambdaCTopKpipi                                 (enabled) 	clone of SmpMakerDefiner
+                    LambdaCTopKs                                    (enabled) 	clone of SmpMakerDefiner
+                    LambdaCTopKspi                                  (enabled) 	clone of SmpMakerDefiner
+                    LambdaCTopKspipi                                (enabled) 	clone of SmpMakerDefiner
+                    LambdaCToLzpi                                   (enabled) 	clone of SmpMakerDefiner
+                    LambdaCToLzpipi                                 (enabled) 	clone of SmpMakerDefiner
+                    LambdaCToLzpipipi                               (enabled) 	clone of SmpMakerDefiner
+                    LambdaCToSzpi                                   (enabled) 	clone of SmpMakerDefiner
+                    LambdaCToSzpipipi                               (enabled) 	clone of SmpMakerDefiner
+                    LambdaCToLzK                                    (enabled) 	clone of SmpMakerDefiner
+                    LambdaCToLzKpi                                  (enabled) 	clone of SmpMakerDefiner
+                    LambdaCToLzKpipi                                (enabled) 	clone of SmpMakerDefiner
+                    LambdaCToSzK                                    (enabled) 	clone of SmpMakerDefiner
+                    LambdaCToSzKpi                                  (enabled) 	clone of SmpMakerDefiner
+                    LambdaCToSzKpipi                                (enabled) 	clone of SmpMakerDefiner
+                SmpB0ToDDstar0h0ProdSequence                    (enabled) 
+                    KsDefault_TightWin                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKPiLoose_D0h0                               (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKPiPi0LoosePID_D0h0                         (enabled) 	clone of SmpSubListerDefiner
+                    D0ToK3PiLoosePID_D0h0                           (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKKLoose_D0h0                                (enabled) 	clone of SmpSubListerDefiner
+                    D0ToPiPiLoose_D0h0                              (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPi0Loose_D0h0                             (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsEtaLoose_D0h0                             (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsEtaPLoose_D0h0                            (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsOmegaLoose_D0h0                           (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPhiLoose_D0h0                             (enabled) 	clone of SmpSubListerDefiner
+                    D0ToKsPiPi_D0h0                                 (enabled) 	clone of SmpSubListerDefiner
+                    D0ToNonCP_D0h0                                  (enabled) 	clone of SmpMergerDefiner
+                    D0ToCPEven_D0h0                                 (enabled) 	clone of SmpMergerDefiner
+                    D0ToCPOdd_D0h0                                  (enabled) 	clone of SmpMergerDefiner
+                    Dstar0ToD0Pi0_D0ToNonCP_D0h0                    (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Gamma_D0ToNonCP_D0h0                  (enabled) 	clone of SmpMakerDefiner
+                    Dstar0_D0ToNonCP_D0h0                           (enabled) 	clone of SmpMergerDefiner
+                    Dstar0ToD0Pi0_D0ToCPEven_D0h0                   (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Gamma_D0ToCPEven_D0h0                 (enabled) 	clone of SmpMakerDefiner
+                    Dstar0_D0ToCPEven_D0h0                          (enabled) 	clone of SmpMergerDefiner
+                    Dstar0ToD0Pi0_D0ToCPOdd_D0h0                    (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Gamma_D0ToCPOdd_D0h0                  (enabled) 	clone of SmpMakerDefiner
+                    Dstar0_D0ToCPOdd_D0h0                           (enabled) 	clone of SmpMergerDefiner
+                    Dstar0ToD0Pi0_D0ToKsPiPi_D0h0                   (enabled) 	clone of SmpMakerDefiner
+                    Dstar0ToD0Gamma_D0ToKsPiPi_D0h0                 (enabled) 	clone of SmpMakerDefiner
+                    Dstar0_D0ToKsPiPi_D0h0                          (enabled) 	clone of SmpMergerDefiner
+                    B0ToD0Pi0_D0ToNonCP                             (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Pi0_D0ToCPEven                            (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Pi0_D0ToCPOdd                             (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Pi0_D0ToKsPiPi                            (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Pi0_D0ToNonCP                         (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Pi0_D0ToCPEven                        (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Pi0_D0ToCPOdd                         (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Pi0_D0ToKsPiPi                        (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Eta_D0ToNonCP                             (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Eta_D0ToCPEven                            (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Eta_D0ToCPOdd                             (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Eta_D0ToKsPiPi                            (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Eta_D0ToNonCP                         (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Eta_D0ToCPEven                        (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Eta_D0ToCPOdd                         (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Eta_D0ToKsPiPi                        (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Etap_D0ToNonCP                            (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Etap_D0ToCPEven                           (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Etap_D0ToCPOdd                            (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Etap_D0ToKsPiPi                           (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Etap_D0ToNonCP                        (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Etap_D0ToCPEven                       (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Etap_D0ToCPOdd                        (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Etap_D0ToKsPiPi                       (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Omega_D0ToNonCP                           (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Omega_D0ToCPEven                          (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Omega_D0ToCPOdd                           (enabled) 	clone of SmpMakerDefiner
+                    B0ToD0Omega_D0ToKsPiPi                          (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Omega_D0ToNonCP                       (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Omega_D0ToCPEven                      (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Omega_D0ToCPOdd                       (enabled) 	clone of SmpMakerDefiner
+                    B0ToDstar0Omega_D0ToKsPiPi                      (enabled) 	clone of SmpMakerDefiner
+            PidSequence                                     (enabled) 
+                PidProdSequence                                 (enabled) 
+                    PidLoadAlgorithm                                (enabled) 	Load PID algorithms into BtaCandidates
+                    PidElectronMicroSequence                        (enabled) 
+                        NoCalElectronMicroSelection                     (enabled) 	select Electrons without using EMC
+                        VeryLooseElectronMicroSelection                 (enabled) 	select very loose Electrons 
+                        LooseElectronMicroSelection                     (enabled) 	select loose Electrons 
+                        TightElectronMicroSelection                     (enabled) 	select tight Electrons 
+                        PidFixR18EmcTrkInterBug                         (enabled) 	 re-compute track-emc intersections
+                        VeryTightElectronMicroSelection                 (enabled) 	select very tight Electrons 
+                        PidLHElectronSelector                           (enabled) 	Likelihood based Electron selection
+                        SuperLooseKMElectronMicroSelection              (enabled) 	SPR based electron selection: super loose 
+                        VeryLooseKMElectronMicroSelection               (enabled) 	SPR based electron selection: very loose 
+                        LooseKMElectronMicroSelection                   (enabled) 	SPR based electron selection: loose 
+                        TightKMElectronMicroSelection                   (enabled) 	SPR based electron selection: tight 
+                        VeryTightKMElectronMicroSelection               (enabled) 	SPR based electron selection: very tight 
+                        SuperTightKMElectronMicroSelection              (enabled) 	SPR based electron selection: super tight 
+                        LooseKMv3ElectronMicroSelection                 (enabled) 	SPR based electron selection: loose 
+                        eCombinedSuperLoose                             (enabled) 	clone of SmpMergerDefiner
+                        eCombinedVeryLoose                              (enabled) 	clone of SmpMergerDefiner
+                        eCombinedLoose                                  (enabled) 	clone of SmpMergerDefiner
+                        eCombinedTight                                  (enabled) 	clone of SmpMergerDefiner
+                        ElectronMicroDispatch                           (enabled) 	Create bitmaps for Electrons
+                    PidMuonMicroSequence                            (enabled) 
+                        MinimumIoniziongMuonMicroSelection              (enabled) 	select minimum ionizing muons 
+                        VeryLooseMuonMicroSelection                     (enabled) 	select very loose muons 
+                        LooseMuonMicroSelection                         (enabled) 	select loose muons 
+                        TightMuonMicroSelection                         (enabled) 	select tight muons 
+                        VeryTightMuonMicroSelection                     (enabled) 	select very tight muons 
+                        LikeVeryLooseMuonSelection                      (enabled) 	select very loose muons with likelihoods
+                        LikeLooseMuonSelection                          (enabled) 	select loose muons with likelihoods
+                        LikeTightMuonSelection                          (enabled) 	select tight muons with likelihoods
+                        PidMuonMicroNNSelectorSequence                  (enabled) 
+                            NNVeryLooseMuonSelection                        (enabled) 	select VLoose NN muons with Fixed Muon Eff.
+                            NNLooseMuonSelection                            (enabled) 	select Loose NN muons with Fixed Mu Eff.
+                            NNTightMuonSelection                            (enabled) 	select Tight NN muons with Fixed Mu Eff.
+                            NNVeryTightMuonSelection                        (enabled) 	select VTight NN muons with Fixed Mu Eff.
+                            NNVeryLooseMuonSelectionFakeRate                (enabled) 	select VLoose NN muons with Fixed Pi Eff.
+                            NNLooseMuonSelectionFakeRate                    (enabled) 	select Loose NN muons with Fixed Pi Eff.
+                            NNTightMuonSelectionFakeRate                    (enabled) 	select Tight NN muons with Fixed Pi Eff.
+                            NNVeryTightMuonSelectionFakeRate                (enabled) 	select VTight NN muons with Fixed Pi Eff.
+                        PidMuonMicroBDTSelectorSequence                 (enabled) 
+                            BDTVeryLooseMuonSelection                       (enabled) 	select VLoose BDT muons with Fixed Muon Eff.
+                            BDTLooseMuonSelection                           (enabled) 	select Loose BDT muons with Fixed Mu Eff.
+                            BDTTightMuonSelection                           (enabled) 	select Tight BDT muons with Fixed Mu Eff.
+                            BDTVeryTightMuonSelection                       (enabled) 	select VTight BDT muons with Fixed Mu Eff.
+                            BDTVeryLooseMuonSelectionFakeRate               (enabled) 	select VLoose BDT muons with Fixed Pi Eff.
+                            BDTLooseMuonSelectionFakeRate                   (enabled) 	select Loose BDT muons with Fixed Pi Eff.
+                            BDTTightMuonSelectionFakeRate                   (enabled) 	select Tight BDT muons with Fixed Pi Eff.
+                            BDTVeryTightMuonSelectionFakeRate               (enabled) 	select VTight BDT muons with Fixed Pi Eff.
+                        PidMuonMicroBDTLoPSelectorSequence              (enabled) 
+                            BDTLoPLooseMuonSelection                        (enabled) 	select Loose Lo P BDT muons with Fixed Mu Eff.
+                            BDTLoPTightMuonSelection                        (enabled) 	select Tight Lo P BDT muons with Fixed Mu Eff.
+                        muCombinedVeryLoose                             (enabled) 	clone of SmpMergerDefiner
+                        muCombinedLoose                                 (enabled) 	clone of SmpMergerDefiner
+                        muCombinedTight                                 (enabled) 	clone of SmpMergerDefiner
+                        muCombinedVeryTight                             (enabled) 	clone of SmpMergerDefiner
+                        muCombinedVeryLooseFakeRate                     (enabled) 	clone of SmpMergerDefiner
+                        muCombinedLooseFakeRate                         (enabled) 	clone of SmpMergerDefiner
+                        muCombinedTightFakeRate                         (enabled) 	clone of SmpMergerDefiner
+                        muCombinedVeryTightFakeRate                     (enabled) 	clone of SmpMergerDefiner
+                        MuonMicroDispatch                               (enabled) 	Create bitmaps for muons
+                    PidKaonMicroSequence                            (enabled) 
+                        VeryLooseKaonMicroSelection                     (enabled) 	select very loose Kaons 
+                        LooseKaonMicroSelection                         (enabled) 	select loose Kaons 
+                        TightKaonMicroSelection                         (enabled) 	select tight Kaons 
+                        VeryTightKaonMicroSelection                     (enabled) 	select very tight Kaons 
+                        NotPionKaonMicroSelection                       (enabled) 	select Kaons: not pions 
+                        NotPionKaonGTLMicroSelection                    (enabled) 	select Kaons: not pions from GoodTracksLoose list 
+                        VeryLooseNNKaonMicroSelection                   (enabled) 	NN based kaon selection: very loose 
+                        LooseNNKaonMicroSelection                       (enabled) 	NN based kaon selection: loose 
+                        TightNNKaonMicroSelection                       (enabled) 	NN based kaon selection: tight 
+                        VeryTightNNKaonMicroSelection                   (enabled) 	NN based kaon selection: very tight 
+                        NotPionNNKaonMicroSelection                     (enabled) 	NN based kaon selection: not pion 
+                        NotPionNNKaonGTLMicroSelection                  (enabled) 	NN based kaon selection: not pion from GoodTracksLoose list 
+                        NotPionLHKaonMicroSelection                     (enabled) 	Likelihood Kaon Selection : notApion 
+                        VeryLooseLHKaonMicroSelection                   (enabled) 	Likelihood Kaon Selection : veryLoose 
+                        LooseLHKaonMicroSelection                       (enabled) 	Likelihood Kaon Selection : loose 
+                        TightLHKaonMicroSelection                       (enabled) 	Likelihood Kaon Selection : tight 
+                        VeryTightLHKaonMicroSelection                   (enabled) 	Likelihood Kaon Selection : veryTight 
+                        NotPionLHKaonGTLMicroSelection                  (enabled) 	select LH Kaons: not pions from GoodTracksLoose list 
+                        VeryLooseGLHKaonMicroSelection                  (enabled) 	Global Likelihood Kaon Selection : veryLoose 
+                        LooseGLHKaonMicroSelection                      (enabled) 	Global Likelihood Kaon Selection : loose 
+                        TightGLHKaonMicroSelection                      (enabled) 	Global Likelihood Kaon Selection : tight 
+                        VeryTightGLHKaonMicroSelection                  (enabled) 	Global Likelihood Kaon Selection : veryTight 
+                        NotPionBDTKaonMicroSelection                    (enabled) 	StatPatternRecognition based BDT kaon selection: not a pion 
+                        NotPionBDTKaonGTLMicroSelection                 (enabled) 	StatPatternRecognition based BDT kaon selection: not a pion from GoodTracksLoose list 
+                        VeryLooseBDTKaonMicroSelection                  (enabled) 	StatPatternRecognition based BDT kaon selection: very loose 
+                        LooseBDTKaonMicroSelection                      (enabled) 	StatPatternRecognition based BDT kaon selection: loose 
+                        TightBDTKaonMicroSelection                      (enabled) 	StatPatternRecognition based BDT kaon selection: tight 
+                        VeryTightBDTKaonMicroSelection                  (enabled) 	StatPatternRecognition based BDT kaon selection: very tight 
+                        SuperLooseKMKaonMicroSelection                  (enabled) 	SPR based kaon selection: super loose 
+                        SuperLooseKMKaonGTLMicroSelection               (enabled) 	SPR based kaon selection: super loose from GoodTracksLoose list 
+                        VeryLooseKMKaonMicroSelection                   (enabled) 	SPR based kaon selection: very loose 
+                        LooseKMKaonMicroSelection                       (enabled) 	SPR based kaon selection: loose 
+                        TightKMKaonMicroSelection                       (enabled) 	SPR based kaon selection: tight 
+                        VeryTightKMKaonMicroSelection                   (enabled) 	SPR based kaon selection: very tight 
+                        SuperTightKMKaonMicroSelection                  (enabled) 	SPR based kaon selection: super tight 
+                        SuperLooseKMv3KaonMicroSelection                (enabled) 	SPR based kaon selection: super loose 
+                        KCombinedSuperLooseGTL                          (enabled) 	clone of SmpMergerDefiner
+                        KCombinedSuperLoose                             (enabled) 	clone of SmpMergerDefiner
+                        KCombinedVeryLoose                              (enabled) 	clone of SmpMergerDefiner
+                        KCombinedLoose                                  (enabled) 	clone of SmpMergerDefiner
+                        KCombinedTight                                  (enabled) 	clone of SmpMergerDefiner
+                        KCombinedVeryTight                              (enabled) 	clone of SmpMergerDefiner
+                        KaonMicroDispatch                               (enabled) 	Create bitmaps for Kaons
+                    PidPionMicroSequence                            (enabled) 
+                        PidRoyPionSelectionLoose                        (enabled) 	Pion Roy Selection : loose pion 
+                        PidRoyPionSelectionNotKaon                      (enabled) 	Pion Roy Selection : not kaons 
+                        VeryLooseLHPionMicroSelection                   (enabled) 	Likelihood Pion Selection : veryLoose 
+                        LooseLHPionMicroSelection                       (enabled) 	Likelihood Pion Selection : loose 
+                        TightLHPionMicroSelection                       (enabled) 	Likelihood Pion Selection : tight 
+                        VeryTightLHPionMicroSelection                   (enabled) 	Likelihood Pion Selection : veryTight 
+                        VeryLooseGLHPionMicroSelection                  (enabled) 	Global Likelihood Pion Selection : veryLoose 
+                        LooseGLHPionMicroSelection                      (enabled) 	Global Likelihood Pion Selection : loose 
+                        TightGLHPionMicroSelection                      (enabled) 	Global Likelihood Pion Selection : tight 
+                        VeryTightGLHPionMicroSelection                  (enabled) 	Global Likelihood Pion Selection : veryTight 
+                        SuperLooseKMPionMicroSelection                  (enabled) 	SPR based pion selection: super loose 
+                        VeryLooseKMPionMicroSelection                   (enabled) 	SPR based pion selection: very loose 
+                        LooseKMPionMicroSelection                       (enabled) 	SPR based pion selection: loose 
+                        TightKMPionMicroSelection                       (enabled) 	SPR based pion selection: tight 
+                        VeryTightKMPionMicroSelection                   (enabled) 	SPR based pion selection: very tight 
+                        SuperTightKMPionMicroSelection                  (enabled) 	SPR based pion selection: super tight 
+                        piCombinedSuperLoose                            (enabled) 	clone of SmpMergerDefiner
+                        piCombinedVeryLoose                             (enabled) 	clone of SmpMergerDefiner
+                        piCombinedLoose                                 (enabled) 	clone of SmpMergerDefiner
+                        piCombinedTight                                 (enabled) 	clone of SmpMergerDefiner
+                        piCombinedVeryTight                             (enabled) 	clone of SmpMergerDefiner
+                        PionMicroDispatch                               (enabled) 	Create bitmaps for Pions
+                    PidProtonMicroSequence                          (enabled) 
+                        VeryLooseLHProtonSelection                      (enabled) 	select VeryLoose LH  Protons 
+                        LooseLHProtonSelection                          (enabled) 	select Loose LH  Protons 
+                        TightLHProtonSelection                          (enabled) 	select Tight LH  Protons 
+                        VeryTightLHProtonSelection                      (enabled) 	select veryTight LH  Protons 
+                        VeryLooseGLHProtonSelection                     (enabled) 	select VeryLoose GLH  Protons 
+                        LooseGLHProtonSelection                         (enabled) 	select Loose GLH  Protons 
+                        TightGLHProtonSelection                         (enabled) 	select Tight GLH  Protons 
+                        VeryTightGLHProtonSelection                     (enabled) 	select VeryTight GLH  Protons 
+                        VeryLooseELHProtonSelection                     (enabled) 	select VeryLoose ELH Protons
+                        LooseELHProtonSelection                         (enabled) 	select Loose ELH Protons
+                        TightELHProtonSelection                         (enabled) 	select Tight ELH Protons
+                        VeryTightELHProtonSelection                     (enabled) 	select veryTight ELH Protons
+                        SuperLooseKMProtonSelection                     (enabled) 	select SuperLoose KM  Protons 
+                        VeryLooseKMProtonSelection                      (enabled) 	select VeryLoose KM  Protons 
+                        LooseKMProtonSelection                          (enabled) 	select Loose KM  Protons 
+                        TightKMProtonSelection                          (enabled) 	select Tight KM  Protons 
+                        VeryTightKMProtonSelection                      (enabled) 	select VeryTight KM  Protons 
+                        SuperTightKMProtonSelection                     (enabled) 	select SuperTight KM  Protons 
+                        pCombinedSuperLoose                             (enabled) 	clone of SmpMergerDefiner
+                        pCombinedVeryLoose                              (enabled) 	clone of SmpMergerDefiner
+                        pCombinedLoose                                  (enabled) 	clone of SmpMergerDefiner
+                        pCombinedTight                                  (enabled) 	clone of SmpMergerDefiner
+                        pCombinedVeryTight                              (enabled) 	clone of SmpMergerDefiner
+                        ProtonMicroDispatch                             (enabled) 	Create bitmaps for Protons
+                    PidMergedPi0MicroSequence                       (enabled) 
+                        MergedPi0MicroSelectionLoose                    (enabled) 	Select MergedPi0s in Micro (Loose cuts)
+                        MergedPi0MicroSelectionTight                    (enabled) 	Select MergedPi0s in Micro (Tight cuts)
+                    PidKlongMicroSequence                           (enabled) 
+                        KlongEmcLooseMicroSelection                     (enabled) 	Select Emc Klongs in Micro (Loose)
+                        KlongEmcTightMicroSelection                     (enabled) 	Select Emc Klongs in Micro (Tight)
+                        KlongIfrLooseMicroSelection                     (enabled) 	Select Ifr Klongs in Micro (Loose cuts)
+                        KlongIfrTightMicroSelection                     (enabled) 	Select Ifr Klongs in Micro (Tight cuts)
+                    TaggingDispatch                                 (enabled) 	tagging dispatch
+                    LooseGammaTagSelection                          (enabled) 	select loose Tag gammas 
+                    TightGammaTagSelection                          (enabled) 	select tight Tag gammas 
+            CompV0Sequence                                  (disabled)
+                MakeBasicLists                                  (enabled) 	Make lists of 2, 3, 4 combinations
+                V0AllGTVL                                       (enabled) 	Pairs of opposite charge GTVL
+            CompKsProdSequence                              (disabled)
+        Analyse2                                        (enabled) 	B -> LambdaC p pi0
+CdbApiInitModule::CdbApiInitModule.cc(224):CdbApiInitModule: Using CDB technology     "Roo".
+CdbApiInitModule::CdbApiInitModule.cc(231):CdbApiInitModule: Using CDB implementation "Readonly".
+CdbApiInitModule::CdbApiInitModule.cc(264):CdbApiInitModule: Using CDB database       "kanga::/cond24boot11/full/cdb_boot.root".
+CdbApiInitModule::CdbApiInitModule.cc(284):CdbApiInitModule: Using CDB view           "<local>::<recent>".
+IfdStrKey(EmcEdgeCorrTheta)IfdStrKey(EmcEdgeCorrPhi)IfdStrKey(EmcEdgeCorrThetaSigma)IfdStrKey(EmcEdgeCorrPhiSigma)IfdStrKey(EmcNeuCorrPeak)IfdStrKey(EmcNeuCorrLambda)IfdStrKey(EmcNeuCorrNu)IfdStrKey(EmcPreshowerCorr)IfdStrKey(EmcPreshowerNNCut)EmcEdgeCorrLoader:begin Job
+EmcNeutCorrLoader:begin Job
+EmcBuildGeom::BdbTclModuleManager.cc(110): CONTAINER <tcl,EmcBuildGeom> DOES NOT EXIST
+EmcPreshowerCorrLoader:begin Job
+DrcMakeNeutralTracks:DrcMakeNeutralTracks geometry initialization 
+DrcMakeNeutralTracks:DrcMakeNeutralTracks normal configuration 
+BtaBuildPidEnv::AbsEnv.cc(399):Overriding BtaEnv object in global environment.
+DrcIdentifyNeutral:Ring Dictionary found in the Conditions Database 
+DrcIdentifyNeutral: New Ring Dictionary found
+DrcIdentifyNeutral:LUT of thetaC corrections found in the Conditions Database
+Sort DrcPidInfoList in module DrcCleanAssociationNeutral
+CompPi0ListMerger:CompPi0ListMerger begin Job
+Psi2S3bodyEE::UsrBlockBase.hh(60): Variable name: preFitMass already in use.
+Psi2S3bodyMuMu::UsrBlockBase.hh(60): Variable name: preFitMass already in use.
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 753e4b4a-e257-11df-89ce-a0a9918279ae
+Adding /store/PRskims/R24/24.5.6e/AllEvents/90/AllEvents_189013
+KanEventInput::KanHeaderTree.cc(192):Borrowed component 3
+KanEventInput::KanEventSource.cc(349):Removing borrowed component from input 3.  Use KanEventSource::loadComponent() for each event
+KanEventInput::KanHeaderTree.cc(192):Borrowed component 4
+KanEventInput::KanEventSource.cc(349):Removing borrowed component from input 4.  Use KanEventSource::loadComponent() for each event
+KanEventInput::KanEventInput.cc(603):Opening collection /store/PRskims/R24/24.5.6e/AllEvents/90/AllEvents_189013
+selectEventSequence : 114508-464507
+KanEventInput::KanTreeBase.cc(246):No Branch called BkgEid
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 67f1e454-90da-11dd-828d-f3490b6534fd
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EmcDetector::applyGlobal: The following alignment constants are loaded: 
+Alignment for element 0Emc Global Barrel
+ Translation vector = (0.196682,0.0365728,-0.0369897)
+ Rotation vector = (0.000919589, 0.000812389, 0.00305823)
+Alignment for element 0Emc Global Endcap
+ Translation vector = (0.413711,-0.17845,0.102325)
+ Rotation vector = (0, 0, 0.00398902)
+These constants will be used to align the EMC
+
+EmcNeutCorrLoader:EmcMkIINeutCorrCalibrator is switching Neutral corrections (to Monte Carlo) OFF
+Using loose selection for preshower correction 
+EmcPreshowerCorrLoader:Preshower correction turned off.
+EmcDigiCalib Constants Info for /emc/EmcSrcCalType:
+Begin: Thu Oct 21 00:00:00 1999 (local time) 0 ns, End: Sat Jan  1 00:00:01 2000 (local time) 0 ns, Created: Mon Sep 30 12:16:09 2002 (local time) 522992600 ns
+EmcDigiCalib Constants Info for /emc/EmcBhabhaType:
+Begin: Fri Oct 22 23:35:00 1999 (local time) 0 ns, End: Sat Jan  1 00:00:01 2000 (local time) 0 ns, Created: Tue Oct  1 15:27:55 2002 (local time) 351760840 ns
+EmcTrackMatch::EmcPocaMatchMethod.cc(877):Use track match constants from ASCII file.
+SuperLooseKMElectronMicroSelection::SvtPidCalibTPTable_Proxy.cc(126):Changing time interval: run=run1a , MC=0  (GmtTime = 3119890830)
+SuperLooseKMElectronMicroSelection::Ifr2DPolyApprox.cc(71):Reading residuals for the polynomial fit from condition /ifr/IfrPolyFitResiduals. This message will not repeat.
+SuperLooseKMElectronMicroSelection::Ifr2DPolyApprox.cc(95):The /ifr/IfrPolyFitResiduals table description line is: "PolyResidLSTRatios_unit.dat: set identical weights to all 1-D clusters used in Ifr2DPolyApprox"
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+LoadMiniBtaCandidates::BtaCandBase.cc(627): attempt to call BtaCandBase::setType("Upsilon(4S)") for a composite
+       BtaCandidate whose 3 daughters have total charge -1
+ Is it not a decay ?  Could it be an error ?   Anyway, the charge is set to the PdtEntry one 
+LoadMiniBtaCandidates::BtaCandBase.cc(627): attempt to call BtaCandBase::setType("Upsilon(4S)") for a composite
+       BtaCandidate whose 9 daughters have total charge -1
+ Is it not a decay ?  Could it be an error ?   Anyway, the charge is set to the PdtEntry one 
+LoadMiniBtaCandidates::BtaCandBase.cc(627): attempt to call BtaCandBase::setType("Upsilon(4S)") for a composite
+       BtaCandidate whose 3 daughters have total charge 1
+ Is it not a decay ?  Could it be an error ?   Anyway, the charge is set to the PdtEntry one 
+LoadMiniBtaCandidates::BtaCandBase.cc(627): attempt to call BtaCandBase::setType("Upsilon(4S)") for a composite
+       BtaCandidate whose 3 daughters have total charge 1
+ Is it not a decay ?  Could it be an error ?   Anyway, the charge is set to the PdtEntry one 
+LoadMiniBtaCandidates::BtaCandBase.cc(627): attempt to call BtaCandBase::setType("Upsilon(4S)") for a composite
+       BtaCandidate whose 4 daughters have total charge -2
+ Is it not a decay ?  Could it be an error ?   Anyway, the charge is set to the PdtEntry one 
+LoadMiniBtaCandidates::BtaCandBase.cc(627): attempt to call BtaCandBase::setType("Upsilon(4S)") for a composite
+       BtaCandidate whose 3 daughters have total charge 1
+ Is it not a decay ?  Could it be an error ?   Anyway, the charge is set to the PdtEntry one 
+LoadMiniBtaCandidates::BtaCandBase.cc(627): attempt to call BtaCandBase::setType("Upsilon(4S)") for a composite
+       BtaCandidate whose 3 daughters have total charge -1
+ Is it not a decay ?  Could it be an error ?   Anyway, the charge is set to the PdtEntry one 
+LoadMiniBtaCandidates::BtaCandBase.cc(627): attempt to call BtaCandBase::setType("Upsilon(4S)") for a composite
+       BtaCandidate whose 9 daughters have total charge -1
+ Is it not a decay ?  Could it be an error ?   Anyway, the charge is set to the PdtEntry one 
+LoadMiniBtaCandidates::BtaCandBase.cc(627): attempt to call BtaCandBase::setType("Upsilon(4S)") for a composite
+       BtaCandidate whose 10 daughters have total charge -2
+ Is it not a decay ?  Could it be an error ?   Anyway, the charge is set to the PdtEntry one 
+LoadMiniBtaCandidates::BtaCandBase.cc(627): attempt to call BtaCandBase::setType("Upsilon(4S)") for a composite
+       BtaCandidate whose 5 daughters have total charge 1
+ Is it not a decay ?  Could it be an error ?   Anyway, the charge is set to the PdtEntry one 
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID c406adb4-90db-11dd-9d13-e55536691e5a
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+Analyse2::BtaCandBase.cc(617): attempt to call BtaCandBase::setType("p+") for a recoTrk with opposite charge.
+ The charge is NOT set to the PdtEntry charge.
+Analyse2::BtaCandBase.cc(617): attempt to call BtaCandBase::setType("e-") for a recoTrk with opposite charge.
+ The charge is NOT set to the PdtEntry charge.
+EvtCounter: processing event # 10000 [ 7f:*:131a7b/58f11cd3:V ]
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+MinimumIoniziongMuonMicroSelection::BtaCandBase.cc(617): attempt to call BtaCandBase::setType("mu-") for a recoTrk with opposite charge.
+ The charge is NOT set to the PdtEntry charge.
+Analyse2::BtaCandBase.cc(617): attempt to call BtaCandBase::setType("e-") for a recoTrk with opposite charge.
+ The charge is NOT set to the PdtEntry charge.
+Analyse2::BtaCandBase.cc(617): attempt to call BtaCandBase::setType("pi+") for a recoTrk with opposite charge.
+ The charge is NOT set to the PdtEntry charge.
+Analyse2::BtaCandBase.cc(617): attempt to call BtaCandBase::setType("anti-p-") for a recoTrk with opposite charge.
+ The charge is NOT set to the PdtEntry charge.
+Analyse2::BtaCandBase.cc(617): attempt to call BtaCandBase::setType("e+") for a recoTrk with opposite charge.
+ The charge is NOT set to the PdtEntry charge.
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+Analyse2::BtaCandBase.cc(617): attempt to call BtaCandBase::setType("anti-p-") for a recoTrk with opposite charge.
+ The charge is NOT set to the PdtEntry charge.
+Analyse2::BtaCandBase.cc(617): attempt to call BtaCandBase::setType("e+") for a recoTrk with opposite charge.
+ The charge is NOT set to the PdtEntry charge.
+EvtCounter: processing event # 20000 [ 7f:*:131a80/3708e12f:N ]
+Analyse2::BtaCandBase.cc(617): attempt to call BtaCandBase::setType("anti-p-") for a recoTrk with opposite charge.
+ The charge is NOT set to the PdtEntry charge.
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID d1a2770e-9942-11dd-8dc8-befae7ebfaae
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EvtCounter: processing event # 30000 [ 7f:7fffff:131bf1/d3677a47:P ]
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID d5e6ac12-9943-11dd-99cc-cd2ea13a8fe3
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EmcDetector::applyGlobal: The following alignment constants are loaded: 
+Alignment for element 0Emc Global Barrel
+ Translation vector = (0.214674,0.019843,-0.277259)
+ Rotation vector = (0.000763011, 0.00102294, 0.00305823)
+Alignment for element 0Emc Global Endcap
+ Translation vector = (0.4334,-0.172144,-0.149035)
+ Rotation vector = (0, 0, 0.00398902)
+These constants will be used to align the EMC
+
+EmcDigiCalib Constants Info for /emc/EmcSrcCalType:
+Begin: Mon Jan 24 12:00:00 2000 (local time) 0 ns, End: Wed Feb  9 10:00:00 2000 (local time) 0 ns, Created: Mon Sep 30 12:16:09 2002 (local time) 524971000 ns
+EmcDigiCalib Constants Info for /emc/EmcBhabhaType:
+Begin: Sat Jan  1 00:00:01 2000 (local time) 0 ns, End: Thu Feb 24 11:01:00 2000 (local time) 0 ns, Created: Tue Oct  1 15:27:55 2002 (local time) 362998880 ns
+EvtCounter: processing event # 40000 [ 7f:*:14b15e/f79b6d67:N ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 50a5170e-ac95-11dd-8715-8fb679064525
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EvtCounter: processing event # 50000 [ 7f:*:14b4d7/14af6e67:X ]
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 4ddb1d1c-ac94-11dd-83cd-ba70add894f6
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 61637032-90e2-11dd-8521-8deb18f6a592
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+EvtCounter: processing event # 60000 [ 7f:*:14b02c/0f12b22f:V ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID a6d72f80-90df-11dd-9df9-a93ea5001bae
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EmcDetector::applyGlobal: The following alignment constants are loaded: 
+Alignment for element 0Emc Global Barrel
+ Translation vector = (0.196682,0.0365728,-0.0369897)
+ Rotation vector = (0.000919589, 0.000812389, 0.00305823)
+Alignment for element 0Emc Global Endcap
+ Translation vector = (0.413711,-0.17845,0.102325)
+ Rotation vector = (0, 0, 0.00398902)
+These constants will be used to align the EMC
+
+EmcDigiCalib Constants Info for /emc/EmcSrcCalType:
+Begin: Thu Oct 21 00:00:00 1999 (local time) 0 ns, End: Sat Jan  1 00:00:01 2000 (local time) 0 ns, Created: Mon Sep 30 12:16:09 2002 (local time) 522992600 ns
+EmcDigiCalib Constants Info for /emc/EmcBhabhaType:
+Begin: Fri Oct 22 23:35:00 1999 (local time) 0 ns, End: Sat Jan  1 00:00:01 2000 (local time) 0 ns, Created: Tue Oct  1 15:27:55 2002 (local time) 351760840 ns
+EvtCounter: processing event # 70000 [ 7f:*:132791/7bdbb663:H ]
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+EvtCounter: processing event # 80000 [ 7f:*:132793/2ae40f3b:V ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+EvtCounter: processing event # 90000 [ 7f:*:132797/2f5857fb:S ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 21e050f2-90e1-11dd-9957-f876eba4f238
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EvtCounter: processing event # 100000 [ 7f:*:1327c5/898d5f7f:K ]
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+EvtCounter: processing event # 110000 [ 7f:*:1327c5/e5cc4a17:P ]
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID d71f0240-90e3-11dd-87b3-e3596c22c68c
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EmcDetector::applyGlobal: The following alignment constants are loaded: 
+Alignment for element 0Emc Global Barrel
+ Translation vector = (0.214674,0.019843,-0.277259)
+ Rotation vector = (0.000763011, 0.00102294, 0.00305823)
+Alignment for element 0Emc Global Endcap
+ Translation vector = (0.4334,-0.172144,-0.149035)
+ Rotation vector = (0, 0, 0.00398902)
+These constants will be used to align the EMC
+
+EmcDigiCalib Constants Info for /emc/EmcSrcCalType:
+Begin: Mon Jan 24 12:00:00 2000 (local time) 0 ns, End: Wed Feb  9 10:00:00 2000 (local time) 0 ns, Created: Mon Sep 30 12:16:09 2002 (local time) 524971000 ns
+EmcDigiCalib Constants Info for /emc/EmcBhabhaType:
+Begin: Sat Jan  1 00:00:01 2000 (local time) 0 ns, End: Thu Feb 24 11:01:00 2000 (local time) 0 ns, Created: Tue Oct  1 15:27:55 2002 (local time) 362998880 ns
+EvtCounter: processing event # 120000 [ 7f:*:14b0e3/91af1b83:S ]
+EvtCounter: processing event # 130000 [ 7f:*:14b0d8/6831bfa3:R ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+EvtCounter: processing event # 140000 [ 7f:*:14b0dd/d2e1ba03:N ]
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID fe2fd1a6-90e4-11dd-886d-a4d0fb685de7
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+EvtCounter: processing event # 150000 [ 7f:7fffff:14b6cd/66d7859f:U ]
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID df9bd3f4-90e7-11dd-847e-9f811de4fea2
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EmcDigiCalib Constants Info for /emc/EmcSrcCalType:
+Begin: Wed Feb  9 10:00:00 2000 (local time) 0 ns, End: Thu Feb 10 09:00:00 2000 (local time) 0 ns, Created: Mon Sep 30 12:16:09 2002 (local time) 525931600 ns
+EmcDigiCalib Constants Info for /emc/EmcBhabhaType:
+Begin: Sat Jan  1 00:00:01 2000 (local time) 0 ns, End: Thu Feb 24 11:01:00 2000 (local time) 0 ns, Created: Tue Oct  1 15:27:55 2002 (local time) 362998880 ns
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 24543328-90e9-11dd-8d32-b4674417af83
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EvtCounter: processing event # 160000 [ 7f:7fffff:14bbbc/ef1c735f:W ]
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 5aec9352-90ea-11dd-88fc-cdecb3a8bfb1
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EvtCounter: processing event # 170000 [ 7f:*:14bbf2/3cfa8cb7:J ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 20c0b96c-90ed-11dd-8b1e-f21933d41b88
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID e10f6424-90ee-11dd-8657-a5965c46670e
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EvtCounter: processing event # 180000 [ 7f:*:14bd05/7a2a9453:M ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+EvtCounter: processing event # 190000 [ 7f:*:14bd0c/8aba1077:S ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 6d6bd80c-90e6-11dd-8122-9381963ed60e
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EvtCounter: processing event # 200000 [ 7f:7fffff:14bb12/5b37860b:M ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+EvtCounter: processing event # 210000 [ 7f:7fffff:14bb0f/ddac9173:T ]
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 17.  Status: poca failure
+EvtCounter: processing event # 220000 [ 7f:7fffff:14bb10/7bf41407:L ]
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID df9bd3f4-90e7-11dd-847e-9f811de4fea2
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EvtCounter: processing event # 230000 [ 7f:7fffff:14bb45/13ef02f3:V ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+EvtCounter: processing event # 240000 [ 7f:7fffff:14bb36/dee0c6d3:Q ]
+EvtCounter: processing event # 250000 [ 7f:7fffff:14bb3b/a3b9449f:T ]
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID a488f842-90eb-11dd-9c7a-83737017b4e0
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EvtCounter: processing event # 260000 [ 7f:*:14bc5a/08b1e73b:Y ]
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+EvtCounter: processing event # 270000 [ 7f:*:14bc59/85af2bb7:U ]
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 20c0b96c-90ed-11dd-8b1e-f21933d41b88
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EvtCounter: processing event # 280000 [ 7f:7fffff:14bcb4/49ae8097:U ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+EvtCounter: processing event # 290000 [ 7f:7fffff:14bca2/418994db:K ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 17.  Status: poca failure
+EvtCounter: processing event # 300000 [ 7f:7fffff:14bca9/06aea7f3:W ]
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID e10f6424-90ee-11dd-8657-a5965c46670e
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+Analyse2::VtkFitter.cc(144):vtxtreefitter::Fitter: Error matrix not positive definite. Changing status to failed.
+EvtCounter: processing event # 310000 [ 7f:*:14bd0e/a2610623:W ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+EvtCounter: processing event # 320000 [ 7f:*:14bd07/b200d8fb:Y ]
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 17.  Status: poca failure
+EvtCounter: processing event # 330000 [ 7f:*:14bd01/af51a933:L ]
+KanEventInput::KanFileReg.cc(340):KanFileReg: read UUID 533083e8-90f0-11dd-870c-dd4a0991cba5
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_001
+KanEventInput::KanTreeBase.cc(246):No Branch called Emc_CandListBank
+KanEventInput::KanTreeBase.cc(246):No Branch called L1Glt
+KanEventInput::KanTreeBase.cc(246):No Branch called Bta
+EmcDigiCalib Constants Info for /emc/EmcSrcCalType:
+Begin: Thu Feb 10 09:00:00 2000 (local time) 0 ns, End: Wed Feb 16 09:00:00 2000 (local time) 0 ns, Created: Mon Sep 30 12:16:09 2002 (local time) 527499400 ns
+EmcDigiCalib Constants Info for /emc/EmcBhabhaType:
+Begin: Sat Jan  1 00:00:01 2000 (local time) 0 ns, End: Thu Feb 24 11:01:00 2000 (local time) 0 ns, Created: Tue Oct  1 15:27:55 2002 (local time) 362998880 ns
+PidExpandChargedSummary::TrkDifPieceTraj.cc(112):construction from vector of trajs failedTrkErrCode: failed, code 18.  Status: invalid range
+EvtCounter: processing event # 340000 [ 7f:*:14cd2b/91c4cce3:P ]
+EvtCounter: processing event # 350000 [ 7f:*:14cd34/39e48033:H ]
+KanEventInput::KanEventInput.cc(500):reached end of last input collection
+TagInspector:TagInspector: endJob summary: 
+	 Events processed: 0
+
+====================================
+End job
+==================================================
+UsrCandRefCheck:end job
+GoodPhotonLoosePenguinSelection:GoodPhotonLoosePenguinSelection selected 0 of 0 candidates.
+GoodPhotonSemiLoose_BFlav:GoodPhotonSemiLoose_BFlav selected 0 of 0 candidates.
+KLHNotPionGTL_BFlav:KLHNotPionGTL_BFlav selected 0 of 0 candidates.
+KLHNotPion_BFlav:KLHNotPion_BFlav selected 0 of 0 candidates.
+KLHVeryTight_BFlav:KLHVeryTight_BFlav selected 0 of 0 candidates.
+KLHTight_BFlav:KLHTight_BFlav selected 0 of 0 candidates.
+KLHLoose_BFlav:KLHLoose_BFlav selected 0 of 0 candidates.
+KLHVeryLoose_BFlav:KLHVeryLoose_BFlav selected 0 of 0 candidates.
+GoodTracksLoose_BFlav:GoodTracksLoose_BFlav selected 0 of 0 candidates.
+GoodTracksVeryLooseHard_BFlav:GoodTracksVeryLooseHard_BFlav selected 0 of 0 candidates.
+GoodTracksVeryLooseSoft_BFlav:GoodTracksVeryLooseSoft_BFlav selected 0 of 0 candidates.
+GoodTracksSemiVeryLoose_BFlav:GoodTracksSemiVeryLoose_BFlav selected 0 of 0 candidates.
+GoodTracksVeryLoose_BFlav:GoodTracksVeryLoose_BFlav selected 0 of 0 candidates.
+CompBFast3body:Selected 0 candidates.
+BchToEtacKch_Final:BchToEtacKch_Final end Job
+B0ToEtacKs_Final:B0ToEtacKs_Final end Job
+GoodPhotonTightAccSelection:GoodPhotonTightAccSelection selected 0 of 0 candidates.
+CompPi0ListMerger:CompPi0ListMerger end Job
+GoodTracksVisibleESelection:GoodTracksVisibleESelection selected 0 of 0 candidates.
+GoodPhotonsVisibleESelection:GoodPhotonsVisibleESelection selected 0 of 0 candidates.
+TaggingMcControl:TaggingMcControl selected 0 of 0 candidates.
+TaggingKaonMicroSelection08:TaggingKaonMicroSelection08 selected 0 of 0 candidates.
+TaggingMuonMicroSelection08:TaggingMuonMicroSelection08 selected 0 of 0 candidates.
+TaggingElectronMicroSelection08:TaggingElectronMicroSelection08 selected 0 of 0 candidates.
+TaggingKaonMicroSelection:TaggingKaonMicroSelection selected 0 of 0 candidates.
+TaggingKaonSMSSelection:TaggingKaonSMSSelection selected 0 of 0 candidates.
+TaggingMuonMicroSelection:TaggingMuonMicroSelection selected 0 of 0 candidates.
+TaggingElectronMicroSelection:TaggingElectronMicroSelection selected 0 of 0 candidates.
+TightELHProtonSelection:TightELHProtonSelection selected 175957 of 1423730 candidates.
+TightLHProtonSelection:TightLHProtonSelection selected 177476 of 1423730 candidates.
+PidLHElectronSelector:PidLHElectronSelector selected 191539 of 1423730 candidates.
+GoodTrackAccSelection:GoodTrackAccSelection selected 0 of 0 candidates.
+GoodTrackVeryLooseSelection:GoodTrackVeryLooseSelection selected 0 of 0 candidates.
+IfrMakeChargedPid:IfrMakeChargedPid end Job
+IfrMuMuCalib::IfrMuMuCalib.cc(130):_mumucal is null!
+TagFilterByValue:TagFilterByValue: endJob summary: 
+	 Events processed: 0
+	 Events passed   : 0
+TagFilterByName:TagFilterByName: endJob summary: 
+	 Events processed: 0
+	 Events passed   : 0
+	 Events prescaled: 0
+EmcPreshowerCorrLoader: end Job
+EmcNeutCorrLoader: end Job
+EmcEdgeCorrLoader: end Job
+DchBuildEnv::AbsEnv.cc(241):Overriding DchEnv object in global environment.
+EvtCounter:EvtCounter:     total number of events=350000
+     total number of events processed=350000
+     total number of events skipped=0
+EvtCounter:Total CPU usage: 9884 User: 9852 System: 32
+=================================
+finished everything
+========================================
+Framework is exiting now.
+DELETE ExitCleanup 
+DELETE ExitCleanup 
+DchDetector: 	number of sets to destroy: 14
+DrcDetector: number of sets to destroy: 51
+9853.422u 33.044s 2:50:39.91 96.5%	0+0k 0+0io 68pf+0w
+qemu: terminating on signal 15 from pid 9397
+
+------------------------------------------------------------------
+TORQUE EPILOGUE:
+  jobid:          1950970.ltda-cron.slac.stanford.edu
+  userid:         ebert
+  groupid:        br
+  job name:       ebert_1352406369_11401
+  session id:     11109
+  used resources: cput=02:50:23,mem=1657152kb,vmem=2640968kb,walltime=02:52:35
+  queue:          batch
+  exit code:      0
+  domain vm-1950970 destroyed
+------------------------------------------------------------------
+

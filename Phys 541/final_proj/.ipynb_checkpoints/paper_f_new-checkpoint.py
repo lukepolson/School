@@ -49,20 +49,18 @@ def dM(M):
     dM = [convolve(M, filt, 'same') for filt in conv_shaper]
     return np.array(dM)
 
-def w(o,l,mu=0.1,nu=0.2,kap=1/3, Z=1/5, M=500):
+def w(o,l,mu=0.1,nu=0.2,kap=1/3, M=500):
     dork = dM(o)
     dlrk = dM(l)
     mu = mu*M
     nu = nu*M
-    Z = Z*M
     kap = kap*l.max()
-    return np.exp(-o/Z)* (np.exp(-(dork/mu)**2) + \
-           (1-np.exp(-(dork/mu)**2))*np.exp(-(dork/nu)**2)*np.exp(-(dlrk/kap)**2))
+    return np.exp(-(dork/mu)**2) + \
+           (1-np.exp(-(dork/mu)**2))*np.exp(-(dork/nu)**2)*np.exp(-(dlrk/kap)**2)
 
-def dwdo(o,l,mu=0.1,nu=0.2,kap=1/3,Z=1/5, M=500):
+def dwdo(o,l,mu=0.1,nu=0.2,kap=1/3, M=500):
     mu = mu*M
     nu = nu*M
-    Z = Z*M
     kap = kap*l.max()
     dork = dM(o)
     dlrk = dM(l)
@@ -70,17 +68,19 @@ def dwdo(o,l,mu=0.1,nu=0.2,kap=1/3,Z=1/5, M=500):
     t1 = np.exp(-(dork/mu)**2)
     t2 = np.exp(-(dork/nu)**2)
     t3 = np.exp(-(dlrk/kap)**2)
-    return np.exp(-o/Z)* (fac * (mu**2 *t1*t2*t3 - mu**2 * t3*t2 + nu**2 * t1*t2*t3 - nu**2 * t1) * dork) -(1/Z)*w(o,l)
+    return fac * (mu**2 *t1*t2*t3 - mu**2 * t3*t2 + nu**2 * t1*t2*t3 - nu**2 * t1) * dork
                     
-def f(o, i, l, h, lam):
+def f(o, i, l, h, lam, lam2, rho=5):
     o_2D = o.reshape(400,400).copy()
     term1 = np.sum((i-convolve(o_2D,h, 'same'))**2) 
     term2 = np.sum(w(o_2D,l)/drk[:,np.newaxis,np.newaxis]*dM(o_2D)**2)
-    return (term1 + lam*term2)
-def gradf(o, i, l, h, lam):
+    term3 = np.sum(np.exp(-rho*l) * o_2D**2)
+    return term1 + lam*term2 + lam2*term3
+def gradf(o, i, l, h, lam, lam2, rho=5):
     o_2D = o.reshape(400,400).copy()
     term1 = 2*convolve((convolve(o_2D,h, 'same')-i), h, 'same')
     term2 = 4*np.sum(w(o_2D,l)/drk[:,np.newaxis,np.newaxis]*dM(o_2D), axis=0)
     term3 = 2*np.sum(1/drk[:,np.newaxis,np.newaxis] * dwdo(o_2D,l)*dM(o_2D)**2, axis=0)
-    grad = term1 + lam*(term2+term3) 
+    term4 = 2*np.exp(-rho*l)*o_2D
+    grad = term1 + lam*(term2+term3)  + lam2*term4
     return grad.ravel()

@@ -43,11 +43,11 @@ def get_interaction_type(E, Ecut=0.01):
                     prob_compton_f(E),
                     prob_pairtrip_f(E)]).cumsum(axis=0)
     U = uniform(size=len(E))
-    interactions[U<probs[0]] = 1
-    interactions[(U>=probs[0])*(U<probs[1])] = 2
-    interactions[(U>=probs[1])*(U<probs[2])] = 3
-    interactions[(U>=probs[2])*(U<=probs[3])] = 4
-    interactions[E<Ecut] = 0
+    interactions[U<probs[0]] = 0
+    interactions[(U>=probs[0])*(U<probs[1])] = 1
+    interactions[(U>=probs[1])*(U<probs[2])] = 2
+    interactions[(U>=probs[2])*(U<=probs[3])] = 3
+    interactions[E<Ecut] = -1
     return interactions
 
 class klein_gen(rv_continuous):
@@ -123,6 +123,10 @@ class RadSim:
         self.IntHist_p = np.zeros((4,len(E_bins)-1)) #interaction histogram
         self.comptonratios = np.array([])
         self.comptonenergies = np.array([])
+        self.comptonthetas = np.array([])
+        self.comptonthetas_rest = np.array([])
+        self.comptonthetaes_rest = np.array([])
+        self.comptonthetaes = np.array([])
         self.Ecut = Ecut
         self.Eshell = Eshell
         self.m = m
@@ -159,20 +163,24 @@ class RadSim:
         # Get photon/electron energy from new angles
         E_p, E_e = compton_scatter(self.E_p[M], Theta_new_p)
         # Get new electron angle
-        Theta_new_e = (1+E_p/self.m) * np.tan(Theta_new_p/2)
+        Theta_new_e = np.arctan2(1, (1+self.E_p[M]/self.m)*np.tan(Theta_new_p/2))
         Phi_new_e = Phi_new_p
         # Extra: Modify histograms for problem
         self.comptonenergies = np.append(self.E_p[M], self.comptonenergies)
         self.comptonratios = np.append(E_e/self.E_p[M], self.comptonratios)
+        self.comptonthetas = np.append(Theta_new_p, self.comptonthetas)
+        self.comptonthetaes = np.append(Theta_new_e, self.comptonthetaes)
         # 1. Modify Direction (rest frame)
         Phi0, Theta0 = angle_rest_frame(self.Ang_p[1][M], self.Ang_p[0][M], Theta_new_p, Phi_new_p)
+        self.comptonthetas_rest = np.append(Theta0, self.comptonthetas_rest)
         self.Ang_p[:,M] = np.array((Phi0, Theta0))
         # 2. Modify energy
         self.E_p[M] = E_p
         # 3. Electron initial conditions (also requires angular transform)
         self.X_e = np.append(self.X_e, self.X_p[:,M], axis=1)
-        self.E_e = np.append(E_e, self.E_e)
-        Phi_e, Theta_e = angle_rest_frame(self.Ang_p[1][M], self.Ang_p[0][M], -Theta_new_e, Phi_new_e)
+        self.E_e = np.append(self.E_e, E_e)
+        Phi_e, Theta_e = angle_rest_frame(self.Ang_p[1][M], self.Ang_p[0][M], Theta_new_e, np.pi+Phi_new_e)
+        self.comptonthetaes_rest = np.append(Theta_e, self.comptonthetaes_rest)
         self.Ang_e = np.append(self.Ang_e, np.array((Phi_e, Theta_e)), axis=1)
     def photo(self, M):
         # 1. Modify Direction (no need, photon is lost)
@@ -181,28 +189,31 @@ class RadSim:
         self.E_p[M] = 0
         # 3. Electron initial conditions
         self.X_e = np.append(self.X_e, self.X_p[:,M], axis=1)
-        self.E_e = np.append(E_e, self.E_e)
+        self.E_e = np.append(self.E_e, E_e)
         self.Ang_e = np.append(self.Ang_e, self.Ang_p[:,M], axis=1) # assume no angle change
     def pair(self, M):
         # 1. Modify Direction (no need, photon lost)
         # 2. Modify Energy
         E_e = self.E_p[M] - 1.022
         self.E_p[M] = 0
-        # 3. Electron initial conditions
-        Theta_new_e = self.m/np.repeat(E_e,2) * ( 1 + 0.5*np.random.randn(2*len(E_e)))
-        Phi_new_e = 2*np.pi*uniform(size=2*len(E_e))
-        Phi_e, Theta_e = angle_rest_frame(np.repeat(self.Ang_p[1][M],2),
-                                          np.repeat(self.Ang_p[0][M],2),
+        # 3. Electron/positron initial conditions
+        Theta_new_e1 = self.m/E_e * ( 1 + 0.5*np.random.randn(len(E_e)))
+        Theta_new_e2 = self.m/E_e * ( 1 + 0.5*np.random.randn(len(E_e)))
+        Theta_new_e = np.append(Theta_new_e1, -Theta_new_e2)
+        Phi_new_e1 = 2*np.pi*uniform(size=len(E_e))
+        Phi_new_e = np.append(Phi_new_e1, Phi_new_e1)
+        Phi_e, Theta_e = angle_rest_frame(np.tile(self.Ang_p[1][M],2),
+                                          np.tile(self.Ang_p[0][M],2),
                                           Theta_new_e, Phi_new_e)
-        self.X_e = np.append(self.X_e, np.repeat(self.X_p[:,M], 2, axis=1), axis=1)
-        self.E_e = np.append(np.repeat(E_e,2)/2, self.E_e)
+        self.X_e = np.append(self.X_e, np.tile(self.X_p[:,M], 2), axis=1)
+        self.E_e = np.append(self.E_e, np.tile(E_e,2)/2)
         self.Ang_e = np.append(self.Ang_e, np.array((Phi_e, Theta_e)), axis=1)
         
     '''For depositing energy of photons with less than 10keV'''
     def deposit(self, M):
         self.X_e = np.append(self.X_e, self.X_p[:,M], axis=1)
         self.E_e = np.append(self.E_e, self.E_p[M])
-        self.Ang_e = np.append(self.Ang_e, np.array((np.zeros(sum(M)), np.zeros(sum(M)))), axis=1)
+        self.Ang_e = np.append(self.Ang_e, np.array((np.pi*np.ones(sum(M)), np.zeros(sum(M)))), axis=1)
         
     '''Go through a single simulation iteration. Return True if finished''' 
     def iterate(self):
@@ -233,7 +244,11 @@ class RadSim:
         phi, theta = self.Ang_e[0], self.Ang_e[1]
         n = np.array([np.cos(phi)*np.sin(theta), np.sin(phi)*np.sin(theta), np.cos(theta)])
         for p in np.linspace(0,1,npoints):
-            X = self.X_e + p*(1/dEdx)*(self.E_e-E_dose_cut) * n
+            X = self.X_e + p*(1/dEdx)*self.E_e * n
             dose_hist += np.histogramdd(X.T, [binsx, binsy, binsz],
                               weights=self.E_e/npoints)[0]
+        self.X = X
         return kerma_hist, dose_hist
+    
+    
+    

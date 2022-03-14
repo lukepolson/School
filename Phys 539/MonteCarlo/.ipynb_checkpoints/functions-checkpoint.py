@@ -61,7 +61,8 @@ class klein_gen(rv_continuous):
             return pdf/(sum(pdf)*np.diff(x)[0])
         else:
             return pdf
-    def get_rvs(self, E):
+    # Note: maxy of 1.2 is sufficient for pdfs of all energies
+    def get_rvs(self, E, maxy=1.2):
         N = len(E)
         finished = np.zeros(N).astype(bool)
         thetas = np.zeros(N)
@@ -69,7 +70,7 @@ class klein_gen(rv_continuous):
             still_need = ~finished ==True
             n = still_need.sum()
             x = uniform(size=n)*np.pi 
-            y = uniform(size=n)*2
+            y = uniform(size=n)*maxy
             updated_indices = y<self.get_pdf(x, E[still_need])
             updated_thetas = x[updated_indices]
             still_need[still_need] = updated_indices # a trick
@@ -234,9 +235,10 @@ class RadSim:
         self.deposit((self.E_p<self.Ecut)*self.Act_p)
         self.Act_p *= self.E_p >= self.Ecut
         return False
-    '''Compute kerma and dose histograms in the region of interest'''
+    '''Compute total interactions, kerma, and dose histograms in the region of interest'''
     def compute_volume_hists(self, binsx, binsy, binsz, binsr=None, binsphi=None, dEdx=2, npoints=50, E_dose_cut=10e-3):
         # Get kerma histogram
+        tot_hist = np.histogramdd(self.X_e.T, [binsx, binsy, binsz])[0]
         kerma_hist = np.histogramdd(self.X_e.T, [binsx, binsy, binsz],
                       weights=self.E_e)[0]
         # Get dose histogram
@@ -247,7 +249,7 @@ class RadSim:
             X = self.X_e + p*(1/dEdx)*self.E_e * n
             dose_hist += np.histogramdd(X.T, [binsx, binsy, binsz],
                               weights=self.E_e/npoints)[0]
-        return kerma_hist, dose_hist
+        return tot_hist, kerma_hist, dose_hist
     
     
     

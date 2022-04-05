@@ -81,10 +81,11 @@ def compute_recon_tomopy(sino, thetas, algo_name, **kwargs):
 # og for original (lambda used to get image)
 
 class PETImage:
-    def __init__(self, CT_im, PET_og):
+    def __init__(self, CT_im, PET_og, make_ani=False):
         self.CT_im = CT_im
         self.PET_og = PET_og
         self.n = self.CT_im.shape[0]
+        self.make_ani = make_ani
     def generate_PET_raw(self):
         self.PET_raw = np.random.poisson(lam=self.PET_og, size=self.PET_og.shape)
         self.PET_raw_ang = np.random.uniform(size=self.PET_raw.sum())*2*np.pi
@@ -113,12 +114,12 @@ class PETImage:
             print(algo_name)
             RD = ReconData(algo_name, masks, masks_name, correction,
                            num_iter, every_n, self.PET_og, sino,
-                            self.PET_im_sino_theta_bins)
+                            self.PET_im_sino_theta_bins, self.make_ani)
             RD.MSE_data()
             self.recon_datas[algo_name] = RD
     
 class ReconData:
-    def __init__(self, algo_name, masks, mask_names, correction, num_iter, every_n, PET_og, sino, thetas, **kwargs):
+    def __init__(self, algo_name, masks, mask_names, correction, num_iter, every_n, PET_og, sino, thetas, make_ani, **kwargs):
         self.algo_name = algo_name
         self.masks = masks
         self.mask_names = mask_names
@@ -129,6 +130,7 @@ class ReconData:
         self.PET_og = PET_og
         self.sino = sino
         self.thetas = thetas
+        self.make_ani =  make_ani
         
     def MSE_data(self):
         self.data = {}
@@ -138,6 +140,8 @@ class ReconData:
         self.iter_bests = [0]*len(self.masks)
         self.im_bests = [0]*len(self.masks)
         self.iters = []
+        if self.make_ani:
+            self.ims = []
         for i in range(self.num_iter):
             if i%self.every_n==0:
                 self.iters.append(i+1)
@@ -150,6 +154,8 @@ class ReconData:
                     im_corr = denoise_nl_means(im, patch_size=10, patch_distance=30, h=30)
                 else:
                     im_corr = im
+                if self.make_ani:
+                    self.ims.append(im_corr)
                 for j, (M, name) in enumerate(zip(self.masks, self.mask_names)):
                     MSE = np.mean((self.PET_og[M]-im_corr[M])**2)
                     VAR = np.var(self.PET_og[M]-im_corr[M])

@@ -135,6 +135,7 @@ class RadSim:
         self.E_e = np.array([])
         self.Ang_e = np.empty((2,0))
         self.XYZ_lim = XYZ_lim
+        self.iter_N = 0
     '''Update position of all photons'''
     def update_position(self):
         Phi0, Theta0 = self.Ang_p[:,self.Act_p]
@@ -234,6 +235,10 @@ class RadSim:
         self.pair((self.IntType_p==3)*self.Act_p)
         self.deposit((self.E_p<self.Ecut)*self.Act_p)
         self.Act_p *= self.E_p >= self.Ecut
+        if self.iter_N==0:
+            # Get histogram of primary photon interactions
+            self.prim_hist = np.histogramdd(self.X_e.T, [binsx, binsy, binsz])[0]
+        self.iter_N+=1
         return False
     '''Compute total interactions, kerma, and dose histograms in the region of interest'''
     def compute_volume_hists(self, binsx, binsy, binsz, binsr=None, binsphi=None, dEdx=2, npoints=50, E_dose_cut=10e-3):

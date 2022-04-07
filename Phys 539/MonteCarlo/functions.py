@@ -28,14 +28,23 @@ prob_compton_f = interp1d(energy_d, compton_d/mu_d)
 prob_photo_f = interp1d(energy_d, photo_d/mu_d)
 prob_pairtrip_f = interp1d(energy_d, pairtrip_d/mu_d)    
 
+
+'''Used to get the initial
+   spectrum of energies incident upon the surface
+   of the phantom'''
 def get_6MV_spectrum(N):
-    cdf = np.array([2480,15000,27290,37590,46310,53760,60140,65680,70460,
+    cdf = np.array([0, 2480,15000,27290,37590,46310,53760,60140,65680,70460,
                        74630,78290, 81510, 84330, 86860, 89090, 91060, 92790,
                        94330, 95670, 96840, 97850, 98710, 99420, 100000]) /100000
-    energies = np.arange(0.25, 6.25, 0.25)
+    energies = np.concatenate([np.array([0.2]), np.arange(0.25, 6.25, 0.25)])
+    cdf_f = interp1d(energies, cdf)
+    energies = np.linspace(0.2, 6, 1000)
+    cdf = cdf_f(energies)
     return energies[np.searchsorted(cdf, np.random.rand(N))]
 
-             
+'''Used to get get interactions based on incident array of energies 
+   E. Returns interaction type (integer from -1 to 3) with relative
+   probabilities determined by interaction coefficients'''          
 def get_interaction_type(E, Ecut=0.01):
     interactions = np.zeros(len(E), dtype=int)
     probs = np.array([prob_coherent_f(E),
@@ -50,6 +59,8 @@ def get_interaction_type(E, Ecut=0.01):
     interactions[E<Ecut] = -1
     return interactions
 
+'''A class used to generate random variables according to the Klein
+   Nishima probability density function. Used in compton scattering'''   
 class klein_gen(rv_continuous):
     def __init__(self, m=0.511):
         super(klein_gen, self).__init__()
@@ -82,6 +93,10 @@ class klein_gen(rv_continuous):
 klein = klein_gen()
 
 
+'''Some code to get the function `get_new_units` which is a function 
+   that takes in scattering angles in the compton frame, incoming photon 
+   angles in the phantom frame, and retuns outgoing angles in the phantom
+   phantom frame'''
 the, phi, the_p, phi_p = smp.symbols(r"\theta \phi \theta' \phi'", positive=True)
 u = smp.Matrix([smp.sin(the)*smp.cos(phi), smp.sin(the)*smp.sin(phi), smp.cos(the)])
 v = smp.Matrix([smp.sin(the_p)*smp.cos(phi_p), smp.sin(the_p)*smp.sin(phi_p), smp.cos(the_p)])
@@ -95,22 +110,45 @@ expr = smp.trigsimp(R@v).simplify()
 expr = expr.subs(smp.Abs(smp.sin(the)), smp.sin(the)).simplify()
 get_new_units = smp.lambdify([the,phi,the_p,phi_p], expr)
 
-'''Convention: Theta is polar angle, alpha is azimuthal angle'''
+'''Returns the angle of scattering from compton scattering in the phantom
+   rest frame'''
 def angle_rest_frame(theta_of_frame, phi_of_frame, theta_in_frame, phi_in_frame):
     n = np.squeeze(get_new_units(theta_of_frame, phi_of_frame, theta_in_frame, phi_in_frame), axis=1)
     # return phi, theta
     return np.arctan2(n[1],n[0]), np.arctan2(np.sqrt(n[0]**2+n[1]**2), n[2])
     
-
+'''Simulates compton scattering'''
 def compton_scatter(E, theta, m=0.511):
     photon = E / (1 + E/m * (1-np.cos(theta)))
     electron = E - photon     
     return photon, electron
     
 
-# all energies in MeV
+'''Main class for the simulation. A few conventions
+    * `_p` always refers to photons
+    * `_e` always refers to electrons
+    * `X` refers to positions
+    * `E` refers to energies
+    * `Act` is a bool array specifying whether or not a photon has lost its energy
+    This class functions in the following way
+    1. Input initial position, direction, and energy of all incident photons
+    2. Update positions of all photons using path length random variable
+    3. Determine interaction type of all photons. Simulate interaction type
+       and determine initial position, direction, and energy of electron
+    4. If photon has lost all its energy, the element in the array `Act_p`
+       corresponding to that photon becomes false
+    4. Repeat 2-4 until all photons have deposited all their energy
+    5. Given initial conditions for all electrons, deposit dose in phantom according
+       to energy loss dEdx. 
+    6. Compute histograms of dose, kerma, number of total and primary interactions
+    Seperate instances of this class can be ran in parallel to produce independent histograms,
+    and histograms can be accumulated at the end. In the case of this project, 100 classes were
+    ran on 100 different compute Canada nodes, each simulating 10 million events. When the histograms
+    were acuumulated, this resulted in 1 billion total events.'''
 class RadSim:
-    def __init__(self, E_p, X_p, Ang_p, E_bins, int_types, Ecut=0.01, Eshell = 543.1e-6, m=0.511,
+    '''Start by defining initial energies and positions of photons, and bins used to accumulate
+       data in histograms at the end. Define all important parameters'''
+    def __init__(self, E_p, X_p, Ang_p, E_bins, int_types, binsx, binsy, binsz, Ecut=0.01, Eshell = 543.1e-6, m=0.511,
                 XYZ_lim=None):
         self.klein = klein_gen()
         self.int_types = int_types
@@ -135,6 +173,9 @@ class RadSim:
         self.E_e = np.array([])
         self.Ang_e = np.empty((2,0))
         self.XYZ_lim = XYZ_lim
+        self.binsx = binsx
+        self.binsy = binsy
+        self.binsz = binsz
         self.iter_N = 0
     '''Update position of all photons'''
     def update_position(self):
@@ -217,7 +258,9 @@ class RadSim:
         self.E_e = np.append(self.E_e, self.E_p[M])
         self.Ang_e = np.append(self.Ang_e, np.array((np.pi*np.ones(sum(M)), np.zeros(sum(M)))), axis=1)
         
-    '''Go through a single simulation iteration. Return True if finished''' 
+    '''Go through a single simulation iteration. This simultaneously updates the positions of
+       all initial photons, and appends coordinates of initial position and energy of electron 
+       which will be used later to deposit dose in phantom. Returns True if finished''' 
     def iterate(self):
         if np.all(~self.Act_p):
             return True
@@ -237,24 +280,24 @@ class RadSim:
         self.Act_p *= self.E_p >= self.Ecut
         if self.iter_N==0:
             # Get histogram of primary photon interactions
-            self.prim_hist = np.histogramdd(self.X_e.T, [binsx, binsy, binsz])[0]
+            self.prim_hist = np.histogramdd(self.X_e.T, [self.binsx, self.binsy, self.binsz])[0]
         self.iter_N+=1
         return False
-    '''Compute total interactions, kerma, and dose histograms in the region of interest'''
-    def compute_volume_hists(self, binsx, binsy, binsz, binsr=None, binsphi=None, dEdx=2, npoints=50, E_dose_cut=10e-3):
+    '''Compute total interactions, kerma, and dose histograms in the region of interest. This function
+       also takes in the initial position, direction, and energy of all electrons, and uses that 
+       information to deposit the dose in the phantom. Returns histograms.'''
+    def compute_volume_hists(self, dEdx=2, npoints=50, E_dose_cut=10e-3):
         # Get kerma histogram
-        tot_hist = np.histogramdd(self.X_e.T, [binsx, binsy, binsz])[0]
-        kerma_hist = np.histogramdd(self.X_e.T, [binsx, binsy, binsz],
+        tot_hist = np.histogramdd(self.X_e.T, [self.binsx, self.binsy, self.binsz])[0]
+        kerma_hist = np.histogramdd(self.X_e.T, [self.binsx, self.binsy, self.binsz],
                       weights=self.E_e)[0]
         # Get dose histogram
-        dose_hist = np.zeros((len(binsx)-1, len(binsy)-1, len(binsz)-1))
+        dose_hist = np.zeros((len(self.binsx)-1, len(self.binsy)-1, len(self.binsz)-1))
         phi, theta = self.Ang_e[0], self.Ang_e[1]
         n = np.array([np.cos(phi)*np.sin(theta), np.sin(phi)*np.sin(theta), np.cos(theta)])
         for p in np.linspace(0,1,npoints):
             X = self.X_e + p*(1/dEdx)*self.E_e * n
-            dose_hist += np.histogramdd(X.T, [binsx, binsy, binsz],
+            dose_hist += np.histogramdd(X.T, [self.binsx, self.binsy, self.binsz],
                               weights=self.E_e/npoints)[0]
-        return tot_hist, kerma_hist, dose_hist
-    
-    
+        return self.prim_hist, tot_hist, kerma_hist, dose_hist
     

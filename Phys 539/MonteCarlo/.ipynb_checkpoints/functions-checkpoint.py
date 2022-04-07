@@ -28,11 +28,15 @@ prob_compton_f = interp1d(energy_d, compton_d/mu_d)
 prob_photo_f = interp1d(energy_d, photo_d/mu_d)
 prob_pairtrip_f = interp1d(energy_d, pairtrip_d/mu_d)    
 
+
 def get_6MV_spectrum(N):
-    cdf = np.array([2480,15000,27290,37590,46310,53760,60140,65680,70460,
+    cdf = np.array([0, 2480,15000,27290,37590,46310,53760,60140,65680,70460,
                        74630,78290, 81510, 84330, 86860, 89090, 91060, 92790,
                        94330, 95670, 96840, 97850, 98710, 99420, 100000]) /100000
-    energies = np.arange(0.25, 6.25, 0.25)
+    energies = np.concatenate([np.array([0.2]), np.arange(0.25, 6.25, 0.25)])
+    cdf_f = interp1d(energies, cdf)
+    energies = np.linspace(0.2, 6, 1000)
+    cdf = cdf_f(energies)
     return energies[np.searchsorted(cdf, np.random.rand(N))]
 
              
@@ -110,7 +114,7 @@ def compton_scatter(E, theta, m=0.511):
 
 # all energies in MeV
 class RadSim:
-    def __init__(self, E_p, X_p, Ang_p, E_bins, int_types, Ecut=0.01, Eshell = 543.1e-6, m=0.511,
+    def __init__(self, E_p, X_p, Ang_p, E_bins, int_types, binsx, binsy, binsz, Ecut=0.01, Eshell = 543.1e-6, m=0.511,
                 XYZ_lim=None):
         self.klein = klein_gen()
         self.int_types = int_types
@@ -135,6 +139,9 @@ class RadSim:
         self.E_e = np.array([])
         self.Ang_e = np.empty((2,0))
         self.XYZ_lim = XYZ_lim
+        self.binsx = binsx
+        self.binsy = binsy
+        self.binsz = binsz
         self.iter_N = 0
     '''Update position of all photons'''
     def update_position(self):
@@ -237,24 +244,22 @@ class RadSim:
         self.Act_p *= self.E_p >= self.Ecut
         if self.iter_N==0:
             # Get histogram of primary photon interactions
-            self.prim_hist = np.histogramdd(self.X_e.T, [binsx, binsy, binsz])[0]
+            self.prim_hist = np.histogramdd(self.X_e.T, [self.binsx, self.binsy, self.binsz])[0]
         self.iter_N+=1
         return False
     '''Compute total interactions, kerma, and dose histograms in the region of interest'''
-    def compute_volume_hists(self, binsx, binsy, binsz, binsr=None, binsphi=None, dEdx=2, npoints=50, E_dose_cut=10e-3):
+    def compute_volume_hists(self, dEdx=2, npoints=50, E_dose_cut=10e-3):
         # Get kerma histogram
-        tot_hist = np.histogramdd(self.X_e.T, [binsx, binsy, binsz])[0]
-        kerma_hist = np.histogramdd(self.X_e.T, [binsx, binsy, binsz],
+        tot_hist = np.histogramdd(self.X_e.T, [self.binsx, self.binsy, self.binsz])[0]
+        kerma_hist = np.histogramdd(self.X_e.T, [self.binsx, self.binsy, self.binsz],
                       weights=self.E_e)[0]
         # Get dose histogram
-        dose_hist = np.zeros((len(binsx)-1, len(binsy)-1, len(binsz)-1))
+        dose_hist = np.zeros((len(self.binsx)-1, len(self.binsy)-1, len(self.binsz)-1))
         phi, theta = self.Ang_e[0], self.Ang_e[1]
         n = np.array([np.cos(phi)*np.sin(theta), np.sin(phi)*np.sin(theta), np.cos(theta)])
         for p in np.linspace(0,1,npoints):
             X = self.X_e + p*(1/dEdx)*self.E_e * n
-            dose_hist += np.histogramdd(X.T, [binsx, binsy, binsz],
+            dose_hist += np.histogramdd(X.T, [self.binsx, self.binsy, self.binsz],
                               weights=self.E_e/npoints)[0]
-        return tot_hist, kerma_hist, dose_hist
-    
-    
+        return self.prim_hist, tot_hist, kerma_hist, dose_hist
     

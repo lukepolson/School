@@ -59,6 +59,9 @@ def get_interaction_type(E, Ecut=0.01):
     interactions[E<Ecut] = -1
     return interactions
 
+
+class MyClass():
+
 '''A class used to generate random variables according to the Klein
    Nishima probability density function. Used in compton scattering'''   
 class klein_gen(rv_continuous):
